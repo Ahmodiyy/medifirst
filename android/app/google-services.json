@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "233660722047",
+    "project_id": "medifirst-a7aeb",
+    "storage_bucket": "medifirst-a7aeb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:233660722047:android:ee90072abafd1e244a484a",
+        "android_client_info": {
+          "package_name": "com.medifirst.medifirst"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "233660722047-hpa9u37f5gbnht32l009me58er2t8odj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoidsoy4zKv7uxcca5Z1L5EbnxQ4VEho0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "233660722047-hpa9u37f5gbnht32l009me58er2t8odj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "233660722047-aae8ds9n97ua54hiu7pmbgtv4mrqc17i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.medifirst.medifirst"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
