@@ -16,6 +16,7 @@ import '../../../../core/widgets/atoms/phone_text_field.dart';
 import '../../../../core/widgets/elements/action_button_container.dart';
 import '../../../../core/widgets/elements/outline_button.dart';
 import '../../../../core/widgets/molecules/error_modal.dart';
+import '../../../../doctor_app/features/edit_doctor_profile/presentation/screens/edit_doctor_profile_screen.dart';
 import '../../../../doctor_app/features/home/presentation/doctor_home_screen.dart';
 import '../../../../pharmacy_app/features/pharmacy_home/presentation/screens/pharmacy_home_screen.dart';
 import '../../../book_doctors/presentation/widgets/set_time_section.dart';
@@ -42,51 +43,24 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   late TextEditingController _codeController;
   late TextEditingController _pwController;
   late TextEditingController  _licenseController;
-  late TextEditingController  _expirationController;
   late TextEditingController _experienceController;
+  late TextEditingController _expertiseController;
   late String category;
-  DateTime? selectedDate = DateTime.now();
+  DateTime? _selectedDate = DateTime.now();
   bool useEmail = true;
   bool obscured = true;
   bool isLoading = false;
 
-
-  Future<void> navigateToHome() async {
+  Future<void> createAccount({required WidgetRef ref, required BuildContext context}) async {
     final sharedPrefs = await SharedPreferences.getInstance();
     final category = sharedPrefs.getString(Constants.appTypeKey);
-    debugPrint('------catergory in login---------${category}----------');
-    switch (category) {
-      case Constants.patientCategory:
-        ref.listenManual(userProvider, (previous, next) {
-         // if (previous == null && next != null) {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
-          //}
-        }, onError: (er, st){
-          throw Exception('$er $st');
-        }, fireImmediately: true);
-        break;
-      case Constants.doctorCategory:
-        ref.listenManual(doctorProvider, (previous, next) {
-         // if (previous == null && next != null) {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DoctorHomeScreen()));
-          //}
-        }, onError: (er, st){
-          throw Exception('$er $st');
-        });
-        break;
-      case Constants.pharmacyCategory:
-        ref.listenManual(pharmacyProvider, (previous, next) {
-          //if (previous == null && next != null) {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const PharmacyHomeScreen()));
-          //}
-        }, onError: (er, st){
-          throw Exception('$er $st');
-        }, fireImmediately: true);
-        break;
+  if(category == Constants.doctorCategory ){
+    if(_licenseController.text.isEmpty || _experienceController.text.isEmpty || _selectedDate == null || _expertiseController.text.isEmpty){
+      return;
     }
   }
-  Future<void> createAccount({required WidgetRef ref, required BuildContext context}) async {
-    ref.read(signUpLoadingProvider.notifier).update((state) => true,);
+     ref.read(signUpLoadingProvider.notifier).update((state) => true,);
+
     try {
       AuthController controller = ref.read(authControllerProvider.notifier);
       if (!useEmail &&
@@ -95,17 +69,28 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           _surnameController.text.isNotEmpty) {
         await controller.registerUserWithNumber(_codeController.text + _phoneController.text,
             _nameController.text, _surnameController.text, context);
-
         return;
       } else if (useEmail &&
           _emailController.text.isNotEmpty &&
           _pwController.text.isNotEmpty &&
           _nameController.text.isNotEmpty &&
           _surnameController.text.isNotEmpty) {
-        await controller.registerWithEmail(_nameController.text,
-            _surnameController.text, _emailController.text, _pwController.text);
+        if(category == Constants.doctorCategory ){
+          await controller.registerWithEmail(_nameController.text,
+              _surnameController.text, _emailController.text, _pwController.text,
+              license: _licenseController.text, experience: int.tryParse(_experienceController.text),
+              expertise: _expertiseController.text, licenseExpiration: _selectedDate);
+          await navigateToHome();
+        }
+        else{
+          await controller.registerWithEmail(_nameController.text,
+              _surnameController.text, _emailController.text, _pwController.text);
+          await navigateToHome();
+        }
+
       }
-      await navigateToHome();
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool(Constants.isLogin, true);
     } catch (e) {
       debugPrint('.....sign up error.....  ${e.toString()}');
       FocusScope.of(context).unfocus();
@@ -121,11 +106,53 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     }
     ref.read(signUpLoadingProvider.notifier).update((state) => false,);
   }
+  Future<void> navigateToHome() async {
+    final sharedPrefs = await SharedPreferences.getInstance();
+    final category = sharedPrefs.getString(Constants.appTypeKey);
+    debugPrint('------catergory in login---------${category}----------');
+    switch (category) {
+      case Constants.patientCategory:
+        ref.listenManual(userProvider, (previous, next) {
+          // if (previous == null && next != null) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+          //}
+        }, onError: (er, st){
+          throw Exception('$er $st');
+        }, fireImmediately: true);
+        break;
+      case Constants.doctorCategory:
+        ref.listenManual(doctorProvider, (previous, next) {
+          // if (previous == null && next != null) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DoctorHomeScreen()));
+          //}
+        }, onError: (er, st){
+          throw Exception('$er $st');
+        });
+        break;
+      case Constants.pharmacyCategory:
+        ref.listenManual(pharmacyProvider, (previous, next) {
+          //if (previous == null && next != null) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const PharmacyHomeScreen()));
+          //}
+        }, onError: (er, st){
+          throw Exception('$er $st');
+        }, fireImmediately: true);
+        break;
+    }
+  }
   void signUpWithGoogle(WidgetRef ref) async {
     ref.read(signUpLoadingProvider.notifier).update((state) => true,);
     try {
-      await ref.read(authControllerProvider.notifier).registerWithGoogle();
-      await navigateToHome();
+      if(category == Constants.doctorCategory ){
+        await ref.read(authControllerProvider.notifier)
+            .registerWithGoogle( license: _licenseController.text, experience: int.tryParse(_expertiseController.text),
+            expertise: _expertiseController.text, licenseExpiration: _selectedDate);
+        await navigateToHome();
+      }else{
+        await ref.read(authControllerProvider.notifier).registerWithGoogle();
+        await navigateToHome();
+      }
+
     } catch (e) {
       showModalBottomSheet(
         context: context,
@@ -154,8 +181,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     _phoneController = TextEditingController();
     _codeController = TextEditingController(text: '+234');
     _licenseController = TextEditingController();
-    _expirationController = TextEditingController();
     _experienceController = TextEditingController();
+    _expertiseController = TextEditingController();
   }
 
   @override
@@ -167,8 +194,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     _codeController.dispose();
     _pwController.dispose();
     _licenseController.dispose();
-    _expirationController.dispose();
     _experienceController.dispose();
+    _expertiseController.dispose();
     super.dispose();
   }
   void getCategory() async {
@@ -213,6 +240,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     fontSize: 36,
                   ),
                 ).alignLeft(),
+                /**
                 (size.height * 47 / 852).pv,
                 GestureDetector(
                   onTap: () {
@@ -231,6 +259,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     ),
                   ),
                 ).alignRight(),
+                    **/
                 (size.height * 21 / 852).pv,
                 Row(
                   children: [
@@ -264,7 +293,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         controller: _licenseController,
                         hint: 'License number',
                         cap: TextCapitalization.words,
-                        textInputType: TextInputType.number,
+                        textInputType: TextInputType.text,
                       ),
                     ),
                     Flexible(child: Container()),
@@ -284,7 +313,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     ? (size.height * 30 / 852).pv
                     :Container(),
                 (category == Constants.doctorCategory)
-                    ? Row(
+                    ?  Row(
                       children: [
                         const Flexible(child: Text("License expiration date",style: TextStyle( color: Palette.hintTextGray,),)),
                         const Spacer(),
@@ -292,11 +321,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         onTap: () async {
                           DateTime? getDate = await showDatePicker(
                               context: context,
-                              initialDate: DateTime.now(),
                               firstDate: DateTime.now(),
                               lastDate: DateTime(2030, 12, 31, 24));
                           if(getDate != null){
-                            selectedDate = getDate;
+                            _selectedDate = getDate;
                             setState(() {
                             });
                           }
@@ -305,7 +333,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              DateFormat.yMd().format(selectedDate!),
+                              DateFormat.yMd().format(_selectedDate!),
                               style: Palette.lightModeAppTheme.textTheme.bodySmall
                                   ?.copyWith(
                                 color: Palette.highlightTextGray,
@@ -321,9 +349,15 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                             ),
                           ],
                         ),
-                                          ),
+                        ),
                       ],
                     )
+                    :Container(),
+                (category == Constants.doctorCategory)
+                    ? (size.height * 30 / 852).pv
+                    :Container(),
+                (category == Constants.doctorCategory)?
+                SpecialtiesDropdown(_expertiseController)
                     :Container(),
                 (category == Constants.doctorCategory)
                     ? (size.height * 30 / 852).pv
@@ -408,6 +442,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   ],
                 ),
                 (size.height * 40.5 / 852).pv,
+                /**
                 const OutlineButton(
                     icon: Icon(
                       Icons.apple,
@@ -427,6 +462,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       label: 'Continue with Google'),
                 ),
                 (size.height * 24 / 852).pv,
+                 **/
                 InkWell(
                   onTap: () => navigateToLoginPage(context),
                   child: Row(

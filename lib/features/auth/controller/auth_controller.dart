@@ -127,10 +127,17 @@ class AuthController extends StateNotifier<bool> {
   }
 
   Future<void> registerWithEmail(
-      String name, String surname, String email, String password,) async {
+      String name, String surname, String email, String password,
+      {String? license, int? experience, String? expertise, DateTime? licenseExpiration}) async {
     try {
+      print('-------------------create account doctor 222222222---------------');
+      print(license);
+      print(experience);
+      print(expertise);
+      print(licenseExpiration);
       final res = await _repo.registerUserWithEmail(
-          email: email, password: password, name: name, surname: surname);
+          email: email, password: password, name: name, surname: surname,
+          license: license, expertise: expertise, experience: experience, licenseExpiration: licenseExpiration);
       res.fold((l) {
         throw Exception(l.error);
       }, (r) async {
@@ -157,9 +164,11 @@ class AuthController extends StateNotifier<bool> {
     }
   }
 
-  Future<void> registerWithGoogle() async {
+  Future<void> registerWithGoogle(
+      {String? license, int? experience, String? expertise, DateTime? licenseExpiration}) async {
     try {
-      final res = await _repo.signInWithGoogle();
+      final res = await _repo.signInWithGoogle(license: license, experience: experience,
+          expertise: expertise, licenseExpiration: licenseExpiration);
       res.fold((l) => throw (Exception(l.error)), (r) async {
         await updateUserState();
       });

@@ -65,12 +65,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 },
                 child: const SettingButtonTile(label: 'Transactions'),
               ),
+              /**
               InkWell(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context)=>const PrescriptionsScreen()));
                 },
                 child: const SettingButtonTile(label: 'Prescriptions'),
               ),
+
               (size.height * 24/852).pv,
               InkWell(
                 onTap: () {
@@ -78,6 +80,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 },
                 child: const SettingButtonTile(label: 'Location'),
               ),
+               **/
               (size.height * 24/852).pv,
               InkWell(
                 onTap: () {

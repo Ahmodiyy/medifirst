@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class DoctorInfo{
@@ -26,6 +27,7 @@ class DoctorInfo{
   final List<String> certificateImages;
   final String qualifications;
   final List<String> favourites;
+  final DateTime licenseExpiration;
 
 //<editor-fold desc="Data Methods">
   const DoctorInfo({
@@ -54,6 +56,7 @@ class DoctorInfo{
     required this.certificateImages,
     required this.qualifications,
     required this.favourites,
+    required this.licenseExpiration,
   });
 
   DoctorInfo copyWith({
@@ -82,6 +85,7 @@ class DoctorInfo{
     List<String>? certificateImages,
     String? qualifications,
     List<String>? favourites,
+    DateTime? licenseExpiration
   }) {
     this.certificateImages.addAll(certificateImages ?? []);
     return DoctorInfo(
@@ -110,6 +114,7 @@ class DoctorInfo{
       certificateImages: this.certificateImages,
       qualifications: qualifications ?? this.qualifications,
       favourites: favourites ?? this.favourites,
+        licenseExpiration : licenseExpiration?? this.licenseExpiration
     );
   }
 
@@ -140,6 +145,7 @@ class DoctorInfo{
       'certificateImages': certificateImages,
       'qualifications': qualifications,
       'favourites': favourites,
+      'licenseExpiration': licenseExpiration,
     };
   }
 
@@ -176,6 +182,7 @@ class DoctorInfo{
       certificateImages: List<String>.from(map['certificateImages']),
       qualifications: map['qualifications'] as String,
       favourites: List<String>.from(map['favourites']),
+      licenseExpiration: (map['licenseExpiration'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
 

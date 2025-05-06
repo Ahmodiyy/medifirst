@@ -18,6 +18,7 @@ import 'package:flutter_callkit_incoming/entities/ios_params.dart';import 'packa
 **/
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart';
 //import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:medifirst/doctor_app/features/home/presentation/doctor_home_screen.dart';
 import 'package:medifirst/features/auth/controller/auth_controller.dart';
@@ -46,41 +47,47 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 bool? login;
 
 void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  final bool? isLogin = prefs.getBool(Constants.isLogin);
-  login = isLogin;
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  const fatalError = true;
-  // Non-async exceptions
-  FlutterError.onError = (errorDetails) {
-    if (fatalError) {
-      // If you want to record a "fatal" exception
-      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-      // ignore: dead_code
-    } else {
-      // If you want to record a "non-fatal" exception
-      FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
-    }
-  };
-  // Async exceptions
-  PlatformDispatcher.instance.onError = (error, stack) {
-    if (fatalError) {
-      // If you want to record a "fatal" exception
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-      // ignore: dead_code
-    } else {
-      // If you want to record a "non-fatal" exception
-      FirebaseCrashlytics.instance.recordError(error, stack);
-    }
-    return true;
-  };
-  runApp(const ProviderScope(child: MyApp()));
-  FlutterNativeSplash.remove();
+  runZonedGuarded(() async{
+    WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+    FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final bool? isLogin = prefs.getBool(Constants.isLogin);
+    login = isLogin;
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    const fatalError = true;
+    // Non-async exceptions
+    FlutterError.onError = (errorDetails) {
+      if (fatalError) {
+        // If you want to record a "fatal" exception
+        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+        // ignore: dead_code
+      } else {
+        // If you want to record a "non-fatal" exception
+        FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+      }
+    };
+    // Async exceptions
+    PlatformDispatcher.instance.onError = (error, stack) {
+      if (fatalError) {
+        // If you want to record a "fatal" exception
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+        // ignore: dead_code
+      } else {
+        // If you want to record a "non-fatal" exception
+        FirebaseCrashlytics.instance.recordError(error, stack);
+      }
+      return true;
+    };
+    runApp(const ProviderScope(child: MyApp()));
+    FlutterNativeSplash.remove();
+  }, (Object error, StackTrace? stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    debugPrintStack(stackTrace: stack, label: error.toString());
+  });
+
   /**
   await FirebaseAppCheck.instance.activate(
     webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
@@ -88,7 +95,6 @@ void main() async {
     appleProvider: AppleProvider.appAttest,
   );
       **/
-
 
 }
 

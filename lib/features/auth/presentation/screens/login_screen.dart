@@ -210,6 +210,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     fontSize: 36,
                   ),
                 ).alignLeft(),
+                /**
                 (size.height * 7 / 852).pv,
                 GestureDetector(
                   onTap: () {
@@ -228,6 +229,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ).alignRight(),
                 ),
+                    **/
                 (size.height * 61 / 852).pv,
                 (isEmail)
                     ? UnderlinedTextField(
@@ -322,6 +324,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ],
                 ),
                 (size.height * 40.5 / 852).pv,
+                /**
                 const OutlineButton(
                     icon: Icon(
                       Icons.apple,
@@ -341,6 +344,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       label: 'Continue with Google'),
                 ),
                 (size.height * 24 / 852).pv,
+                    **/
                 InkWell(
                   onTap: () {
                     Navigator.pushReplacement(

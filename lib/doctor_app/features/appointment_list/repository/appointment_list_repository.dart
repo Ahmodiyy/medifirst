@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:medifirst/core/constants/data.dart';
 import 'package:medifirst/core/constants/firebase_constants.dart';
 import 'package:medifirst/core/providers/firebase_providers.dart';
 import 'package:medifirst/models/appointment_info.dart';
@@ -47,6 +46,21 @@ class AppointmentListRepository {
     });
   }
 
+  Stream<List<AppointmentInfo>> getDoctorAppointment(String doctorId) {
+    print('DOCTORID => $doctorId');
+    return _doctors
+        .doc(doctorId)
+        .collection(FirebaseConstants.appointmentsCollection)
+        .where('status', isEqualTo: 2)
+        .snapshots()
+        .map((event) {
+      return event.docs.map((e) {
+        print(e.data().toString());
+        return AppointmentInfo.fromMap(e.data() as Map<String, dynamic>);
+      }).toList();
+    });
+  }
+
   Stream<List<AppointmentInfo>> getDoctorVideoAppointments(String doctorId) {
     return _appointments
         .where('doctorId', isEqualTo: doctorId)
@@ -66,7 +80,7 @@ class AppointmentListRepository {
         .where('doctorId', isEqualTo: doctorId)
         .where('type', isEqualTo: 2)
         .where('status', isEqualTo: 2)
-        .orderBy('startTime',descending: true)
+        .orderBy('startTime', descending: true)
         .snapshots()
         .map((event) {
       return event.docs
@@ -89,24 +103,32 @@ class AppointmentListRepository {
     });
   }
 
-  Future<void> acceptAppointmentRequest(AppointmentInfo appt)async{
-    try{
+  Future<void> acceptAppointmentRequest(AppointmentInfo appt) async {
+    try {
       await _appointments.doc(appt.aID).set(appt.toMap());
-      await _doctors.doc(appt.doctorId).collection(FirebaseConstants.appointmentsCollection).doc(appt.aID).set(appt.toMap());
-    }on FirebaseException catch(e){
+      await _doctors
+          .doc(appt.doctorId)
+          .collection(FirebaseConstants.appointmentsCollection)
+          .doc(appt.aID)
+          .set(appt.toMap());
+    } on FirebaseException catch (e) {
       throw Exception(e.message!);
-    } catch(e){
+    } catch (e) {
       rethrow;
     }
   }
 
-  Future<void> rejectAppointmentRequest(AppointmentInfo appt)async{
-    try{
+  Future<void> rejectAppointmentRequest(AppointmentInfo appt) async {
+    try {
       // await _appointments.doc(appt.aID).set(appt.toMap());
-      await _doctors.doc(appt.doctorId).collection(FirebaseConstants.appointmentsCollection).doc(appt.aID).set(appt.toMap());
-    }on FirebaseException catch(e){
+      await _doctors
+          .doc(appt.doctorId)
+          .collection(FirebaseConstants.appointmentsCollection)
+          .doc(appt.aID)
+          .set(appt.toMap());
+    } on FirebaseException catch (e) {
       throw Exception(e.message!);
-    } catch(e){
+    } catch (e) {
       rethrow;
     }
   }

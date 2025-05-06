@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
 import '../../../../../core/theming/palette.dart';
+import '../../../wallet/presentation/screens/doctor_wallet_screen.dart';
 
 class DoctorSettingsScreen extends ConsumerStatefulWidget {
   const DoctorSettingsScreen({super.key});
@@ -48,59 +49,85 @@ class _SettingsScreenState extends ConsumerState<DoctorSettingsScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              (size.height * 24/852).pv,
+              (size.height * 24 / 852).pv,
               const DoctorWalletBalanceCard().sidePad(16),
-              (size.height * 30/852).pv,
-              const SectionHeadingText(heading: 'ACCOUNT SETTINGS').sidePad(16).alignLeft(),
-              (size.height * 12/852).pv,
+              (size.height * 30 / 852).pv,
+              const SectionHeadingText(heading: 'ACCOUNT SETTINGS')
+                  .sidePad(16)
+                  .alignLeft(),
+              (size.height * 12 / 852).pv,
               InkWell(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const EditDoctorProfileScreen()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const EditDoctorProfileScreen()));
                 },
                 child: const SettingButtonTile(label: 'My Profile'),
               ),
-              (size.height * 24/852).pv,
-              const SectionHeadingText(heading: 'GENERAL').sidePad(16).alignLeft(),
-              (size.height * 12/852).pv,
+              (size.height * 24 / 852).pv,
+              const SectionHeadingText(heading: 'GENERAL')
+                  .sidePad(16)
+                  .alignLeft(),
+              (size.height * 12 / 852).pv,
               InkWell(
                 onTap: () {
-                  //TODO add correct function
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const DoctorWalletScreen()));
                 },
                 child: const SettingButtonTile(label: 'Transactions'),
               ),
-              InkWell(
-                onTap: () {
+              /**
+                  InkWell(
+                  onTap: () {
                   //TODO get doctors prescriptions screen
                   Navigator.push(context, MaterialPageRoute(builder: (context)=>const Placeholder()));
-                },
-                child: const SettingButtonTile(label: 'Prescriptions'),
-              ),
-              (size.height * 24/852).pv,
-              InkWell(
-                onTap: () {
+                  },
+                  child: const SettingButtonTile(label: 'Prescriptions'),
+                  ),
+                  (size.height * 24/852).pv,
+                  InkWell(
+                  onTap: () {
                   //TODO add correct function
-                },
-                child: const SettingButtonTile(label: 'Location'),
-              ),
-              (size.height * 24/852).pv,
+                  },
+                  child: const SettingButtonTile(label: 'Location'),
+                  ),
+               **/
+              (size.height * 24 / 852).pv,
               InkWell(
                   onTap: () {
-                    Navigator.push(context, (MaterialPageRoute(builder: (context)=>const ReportIssueScreen())));
+                    Navigator.push(
+                        context,
+                        (MaterialPageRoute(
+                            builder: (context) => const ReportIssueScreen())));
                   },
-                  child: const SettingButtonTile(label: 'Report a problem', svg: 'assets/icons/svgs/danger.svg',)
-              ),
-              (size.height * 24/852).pv,
+                  child: const SettingButtonTile(
+                    label: 'Report a problem',
+                    svg: 'assets/icons/svgs/danger.svg',
+                  )),
+              (size.height * 24 / 852).pv,
               InkWell(
                 onTap: () async {
                   await ref.read(authControllerProvider.notifier).signOut();
-                  final SharedPreferences prefs = await SharedPreferences.getInstance();
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
                   prefs.clear();
                   ZegoUIKitPrebuiltCallInvitationService().uninit();
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const WelcomeScreen()));
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const WelcomeScreen()));
                 },
-                child: const SettingButtonTile(label: 'Sign Out', svg: 'assets/icons/svgs/logout.svg', color: Palette.logoutRed,),
+                child: const SettingButtonTile(
+                  label: 'Sign Out',
+                  svg: 'assets/icons/svgs/logout.svg',
+                  color: Palette.logoutRed,
+                ),
               ),
-              (size.height * 53/852).pv,
+              (size.height * 53 / 852).pv,
             ],
           ),
         ),

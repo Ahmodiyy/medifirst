@@ -20,6 +20,7 @@ class _ReportIssueScreenState extends ConsumerState<ReportIssueScreen> {
   late TextEditingController _lastNameController;
   late TextEditingController _emailController;
   late TextEditingController _issueController;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -39,9 +40,15 @@ class _ReportIssueScreenState extends ConsumerState<ReportIssueScreen> {
     super.dispose();
   }
 
-  void postFeedback(WidgetRef ref, BuildContext context)async{
-    try{
-      if(_firstNameController.text.isNotEmpty && _lastNameController.text.isNotEmpty && _emailController.text.isNotEmpty && _issueController.text.isNotEmpty){
+  void postFeedback(WidgetRef ref, BuildContext context) async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      if (_firstNameController.text.isNotEmpty &&
+          _lastNameController.text.isNotEmpty &&
+          _emailController.text.isNotEmpty &&
+          _issueController.text.isNotEmpty) {
         await ref.read(feedbackControllerProvider).sendFeedback(
             firstName: _firstNameController.text,
             surname: _lastNameController.text,
@@ -53,11 +60,18 @@ class _ReportIssueScreenState extends ConsumerState<ReportIssueScreen> {
               return const ActionSuccessModal();
             });
       }
-    } catch(e){
-      showModalBottomSheet(context: context, builder: (context){
-        return const ErrorModal(message: 'Please try again');
-      });
+    } catch (e) {
+      FocusScope.of(context).unfocus();
+      await Future.delayed(const Duration(milliseconds: 500));
+      showModalBottomSheet(
+          context: context,
+          builder: (context) {
+            return const ErrorModal(message: 'Please try again');
+          });
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -73,7 +87,7 @@ class _ReportIssueScreenState extends ConsumerState<ReportIssueScreen> {
           onPressed: () {
             Navigator.pop(context);
           },
-          padding: EdgeInsets.only(right: size.width * 16/393),
+          padding: EdgeInsets.only(right: size.width * 16 / 393),
           icon: const Icon(
             Icons.chevron_left_sharp,
             color: Palette.blackColor,
@@ -87,46 +101,51 @@ class _ReportIssueScreenState extends ConsumerState<ReportIssueScreen> {
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: size.width * 16/393).copyWith(bottom: size.height * 24/852),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Text(
-                "Let’s make your experience better!",
-                style:
-                    Palette.lightModeAppTheme.textTheme.titleMedium?.copyWith(
-                  fontSize: 34,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text(
+                  "Let’s make your experience better!",
+                  style:
+                      Palette.lightModeAppTheme.textTheme.titleMedium?.copyWith(
+                    fontSize: 34,
+                  ),
                 ),
-              ),
-              (size.height * 60/852).pv,
-              Row(
-                children: [
-                  SizedBox(
-                      width: size.width * 170/393,
-                      child: UnderlinedTextField(
-                          controller: _firstNameController,
-                          hint: 'First Name')),
-                  Flexible(child: Container()),
-                  SizedBox(
-                      width: size.width * 170/393,
-                      child: UnderlinedTextField(
-                          controller: _lastNameController, hint: 'Last Name')),
-                ],
-              ),
-              (size.height * 53/852).pv,
-              UnderlinedTextField(
-                  controller: _emailController, hint: 'Email Address'),
-              (size.height * 53/852).pv,
-              UnderlinedTextField(
-                  controller: _issueController, hint: 'Report Issue'),
-              Flexible(child: Container()),
-              InkWell(
-                onTap: ()=>postFeedback(ref, context),
-                child: const ActionButtonContainer(title: 'Done'),
-              ),
-            ],
+                (size.height * 60 / 852).pv,
+                Row(
+                  children: [
+                    SizedBox(
+                        width: size.width * 170 / 393,
+                        child: UnderlinedTextField(
+                            controller: _firstNameController,
+                            hint: 'First Name')),
+                    Flexible(child: Container()),
+                    SizedBox(
+                        width: size.width * 170 / 393,
+                        child: UnderlinedTextField(
+                            controller: _lastNameController,
+                            hint: 'Last Name')),
+                  ],
+                ),
+                (size.height * 53 / 852).pv,
+                UnderlinedTextField(
+                    controller: _emailController, hint: 'Email Address'),
+                (size.height * 53 / 852).pv,
+                UnderlinedTextField(
+                    controller: _issueController, hint: 'Report Issue'),
+                (size.height * 60 / 852).pv,
+                InkWell(
+                  onTap: () => postFeedback(ref, context),
+                  child: isLoading
+                      ? const ActionButtonContainer(title: 'Loading...')
+                      : const ActionButtonContainer(title: 'Done'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -145,7 +145,10 @@ class AuthRepository {
     }
   }
 
-  FutureEither<String> signInWithGoogle() async {
+  FutureEither<String> signInWithGoogle(
+      {
+        String? license, int? experience, String? expertise, DateTime? licenseExpiration
+      }) async {
     try {
       final GoogleSignInAccount? user = await _googleSignIn.signIn();
 
@@ -167,7 +170,12 @@ class AuthRepository {
             await _users.doc(userModel.uid).set(userModel.toMap());
             break;
           case Constants.doctorCategory:
-            final doctor = DoctorInfo(name: userCred.user!.displayName ?? 'No name', surname: '', doctorId: userCred.user!.uid, doctorImage: userCred.user!.photoURL ?? Constants.defaultProfilePic, profession: '', openingHours: const TimeOfDay(hour: 9, minute: 0), closingHours: const TimeOfDay(hour: 17, minute: 0), numberOfReviews: 0, totalRating: 0, avgRating: 0, consultationFee: 5000, licenseNumber: '', age: 0, bio: '', state: 'Lagos', lga: 'Shomolu', yearsOfExperience: 0, certificateImages: [], qualifications: '', favourites: [], address: '', number: userCred.user!.phoneNumber ?? '');
+            final doctor = DoctorInfo(name: userCred.user!.displayName ?? 'No name', surname: '', doctorId:
+            userCred.user!.uid, doctorImage: userCred.user!.photoURL ?? Constants.defaultProfilePic, profession: expertise!,
+                openingHours: const TimeOfDay(hour: 9, minute: 0), closingHours: const TimeOfDay(hour: 17, minute: 0),
+                numberOfReviews: 0, totalRating: 0, avgRating: 0, consultationFee: 5000, licenseNumber: license!, age: 0,
+                bio: '', state: 'Lagos', lga: 'Shomolu', yearsOfExperience: experience!, certificateImages: [], qualifications: '',
+                favourites: [], address: '', number: userCred.user!.phoneNumber ?? '', licenseExpiration: licenseExpiration!);
             await _doctors.doc(doctor.doctorId).set(doctor.toMap());
             break;
           case Constants.pharmacyCategory:
@@ -314,15 +322,22 @@ class AuthRepository {
       required String password,
       required String name,
       required String surname,
-      }) async {
+      String? license, int? experience, String? expertise, DateTime? licenseExpiration
+}) async {
     try {
       UserCredential? cred = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       final String uid = cred.user!.uid;
-      final res = await saveUserInDatabase(uid: uid, name: name, surname: surname, email: email);
+      print('-------------------create account doctor 333333333---------------');
+      print(license);
+      print(experience);
+      print(expertise);
+      print(licenseExpiration);
+      final res = await saveUserInDatabase(uid: uid, name: name, surname: surname, email: email,
+          license: license, expertise: expertise, experience: experience, licenseExpiration: licenseExpiration);
       res.fold((l) => throw(Exception(l.error)), (r){
       });
-      return right('success');
+      return right(cred.user!.email!);
     } catch (e) {
       return left(Failure(e.toString()));
     }
@@ -389,7 +404,9 @@ class AuthRepository {
       required String name,
         required String surname,
       String phone = '',
-      String email = ''}) async {
+      String email = '',
+        String? license, int? experience, String? expertise, DateTime? licenseExpiration
+      }) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? type = prefs.getString(Constants.appTypeKey);
@@ -401,7 +418,12 @@ class AuthRepository {
           await _users.doc(user.uid).set(user.toMap());
           break;
         case Constants.doctorCategory:
-          DoctorInfo doctor = DoctorInfo(name: name, surname: surname, doctorId: uid, doctorImage: profilePic, profession: '', openingHours: const TimeOfDay(hour: 9, minute: 0), closingHours: const TimeOfDay(hour: 17, minute: 0), numberOfReviews: 0, totalRating: 0, avgRating: 0, consultationFee: 5000, licenseNumber: '', age: 0, bio: '', state: 'Lagos', lga: 'Shomolu', yearsOfExperience: 0, certificateImages: [], qualifications: '', favourites: [], address: '', number: phone);
+          DoctorInfo doctor = DoctorInfo(name: name, surname: surname, doctorId: uid, doctorImage: profilePic,
+              profession: expertise!, openingHours: const TimeOfDay(hour: 9, minute: 0),
+              closingHours: const TimeOfDay(hour: 17, minute: 0), numberOfReviews: 0, totalRating: 0,
+              avgRating: 0, consultationFee: 5000, licenseNumber: license!, age: 0, bio: '', state: 'Lagos',
+              lga: 'Shomolu', yearsOfExperience: experience!, certificateImages: [], qualifications: '',
+              favourites: [], address: '', number: phone, licenseExpiration: licenseExpiration!);
           await _doctors.doc(doctor.doctorId).set(doctor.toMap());
           break;
         case Constants.pharmacyCategory:

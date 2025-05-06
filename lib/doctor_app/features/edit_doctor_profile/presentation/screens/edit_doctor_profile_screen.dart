@@ -44,7 +44,7 @@ class FirebaseService {
 
 final firebaseServiceProvider = Provider((ref) => FirebaseService());
 
-final specialtiesProvider = FutureProvider<List<String>>((ref) async {
+final specialtiesProvider = FutureProvider.autoDispose<List<String>>((ref) async {
   final firebaseService = ref.watch(firebaseServiceProvider);
   return await firebaseService.fetchSpecialties();
 });
@@ -323,10 +323,10 @@ class _SpecialtiesDropdownState extends ConsumerState<SpecialtiesDropdown> {
       data: (specialtiesList) {
         return DropdownButton<String>(
           dropdownColor: Palette.whiteColor,
+          value: specialtiesList.contains(widget.controller.text) ? widget.controller.text : null,
           isExpanded: true,
-          value: widget.controller.text,
-          hint: Text('Select a specialty'),
-          items: specialtiesList.map((String specialty) {
+          hint: const Text('Select a specialty',style: TextStyle( color: Palette.hintTextGray,)),
+          items: specialtiesList.toSet().map((String specialty) {
             return DropdownMenuItem<String>(
               value: specialty,
               child: Text(specialty,

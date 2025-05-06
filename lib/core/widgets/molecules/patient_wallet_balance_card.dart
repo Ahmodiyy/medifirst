@@ -4,11 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medifirst/core/theming/palette.dart';
 import 'package:medifirst/core/theming/spaces.dart';
 import 'package:medifirst/core/widgets/elements/action_button_container.dart';
-import 'package:medifirst/doctor_app/features/doctor_settings/controller/doctor_settings_controller.dart';
 import 'package:medifirst/features/auth/controller/auth_controller.dart';
 import 'package:medifirst/features/settings/controller/settings_controller.dart';
 import 'package:medifirst/features/settings/presentation/widgets/deposit_modal.dart';
-import 'package:pay_with_paystack/pay_with_paystack.dart';
 
 import '../../constants/data.dart';
 import '../elements/error_text.dart';
@@ -139,10 +137,16 @@ class _PatientWalletBalanceCardState
           (size.height * 16 / 852).pv,
           InkWell(
               onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const DepositModal()));
+                /**
                 showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
                     builder: (context) => const DepositModal());
+                    **/
               },
               child: const ActionButtonContainer(
                 title: 'Fund Wallet',
