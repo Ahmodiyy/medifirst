@@ -1,0 +1,136 @@
+name: medifirst
+description: A new Flutter project.
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.2 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  cupertino_icons: ^1.0.2
+  google_fonts: ^6.1.0
+  flutter_riverpod: ^2.4.4
+  google_sign_in: ^6.1.5
+  cloud_firestore: ^5.5.2
+  firebase_auth: ^5.5.2
+  firebase_crashlytics: ^4.3.5
+  firebase_core: ^3.13.0
+  firebase_messaging: ^15.2.5
+  firebase_storage: ^12.4.5
+  cloud_functions: ^5.4.0
+  flutter_svg: ^2.0.7
+  dotted_border: ^2.1.0
+  csv: ^6.0.0
+  file_picker: ^8.0.6
+  intl: ^0.19.0
+  uuid: ^4.1.0
+  country_code_picker: ^3.0.0
+  routemaster: ^1.0.1
+  google_maps_flutter: ^2.5.0
+  fpdart: ^1.1.0
+  permission_handler: ^11.0.1
+  nigerian_states_and_lga: ^1.0.0
+  shared_preferences: ^2.0.15
+  #  firebase_app_check: ^0.2.1+8
+  location: ^5.0.3
+  geolocator: ^11.0.0
+  geocoding: ^3.0.0
+  google_places_flutter: ^2.0.8
+  paystack_for_flutter: ^1.0.4
+  http: ^1.2.1
+  image_picker: ^1.1.1
+  mime: ^1.0.5
+  open_filex: ^4.7.0
+  path_provider: ^2.1.3
+  #  flutter_firebase_chat_core: ^1.6.7
+  flutter_chat_ui: ^1.6.13
+  url_launcher: ^6.3.0
+  get: ^4.6.6
+  flutter_local_notifications: ^17.2.2
+  zego_uikit_prebuilt_call: ^4.16.13
+  zego_uikit_signaling_plugin: ^2.8.7
+  zego_uikit: ^2.27.0
+  flutter_native_splash: ^2.4.1
+#  flutter_windowmanager: ^0.2.0
+
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.13.1
+  flutter_lints: ^2.0.0
+  build_runner: ^2.4.6
+
+
+
+
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/icons/
+    - assets/icons/svgs/
+    - assets/icons/svgs/transactions/
+    - assets/icons/explore/
+    - assets/icons/tab_bar/
+    - assets/images/
+    - assets/images/welcome_bg.png
+    - assets/images/onboard_bg.jpg
+    - assets/images/logo/
+  #   - images/a_dot_ham.jpeg
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Light.ttf
+          weight: 400
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
+        - asset: assets/fonts/Roboto-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Roboto-Medium.ttf
+          weight: 600
+        - asset: assets/fonts/Roboto-Light.ttf
+          weight: 400
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages
+flutter_native_splash:
+  color: "#ffffff"
+  icon_background_color: "#ffffff"
+  image: assets/images/logo/splash.png
