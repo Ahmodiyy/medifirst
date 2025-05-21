@@ -1,0 +1,267 @@
+Privacy Policy
+1. Introduction
+Welcome to MediFirst, a telemedicine platform committed to safeguarding your privacy. This
+Privacy Policy explains how we collect, use, disclose, and protect your personal information
+when you use our services. By accessing or using MediFirst, you agree to the practices
+described in this Privacy Policy.
+2. Information We Collect
+We collect the following types of information:
+• Personal Information: Name, contact details, date of birth, gender, identification
+documents, and emergency contact details.
+• Health Information: Medical history, symptoms, prescriptions, diagnostic reports,
+treatment plans, and consultation records.
+• Payment Information: Billing details, transaction history, credit/debit card information,
+and insurance details where applicable.
+• Technical Information: IP address, device details, location data, operating system,
+browsing behavior, and other analytics-related data.
+• Communication Records: Messages, emails, calls, and interactions with our support
+team.
+3. How We Use Your Information
+We use your information to:
+• Provide telemedicine consultations and facilitate doctor-patient interactions.
+• Maintain accurate and up-to-date medical records for continuity of care.
+• Process payments and manage billing-related queries.
+• Enhance platform functionality, diagnose technical issues, and improve user
+experience.
+• Conduct research, statistical analysis, and health analytics while maintaining user
+anonymity.
+• Ensure compliance with healthcare regulations and applicable legal requirements.
+• Protect against fraud, unauthorized access, and security threats.
+• Provide customer support and respond to inquiries effectively.
+4. Sharing of Information
+We do not sell your personal information. However, we may share your information with:
+• Healthcare Providers: To facilitate medical consultations, treatment, and follow-ups.
+• Payment Processors: To securely process transactions and manage financial
+operations.
+• Regulatory Authorities: If required by law, court orders, or in response to legal
+proceedings.
+• Technology Partners: To enhance security, improve system performance, and
+integrate necessary features.
+• Insurance Providers: When applicable, to verify coverage and process claims.
+• Business Transfers: In case of a merger, acquisition, or sale of assets, user data may
+be transferred to the new entity.
+5. Data Security
+We implement industry-standard security measures, including:
+• Data encryption for secure storage and transmission.
+• Multi-factor authentication and role-based access controls to prevent unauthorized
+access.
+• Regular security audits and vulnerability assessments.
+• Secure server infrastructure with firewalls and intrusion detection mechanisms.
+• Secure data backup and disaster recovery protocols to protect against data loss.
+6. Your Rights
+You have the right to:
+• Access, update, or correct your personal data.
+• Withdraw consent for data processing (subject to legal or contractual obligations).
+• Request the deletion of your data where applicable.
+• Restrict or object to certain data processing activities.
+• Request a copy of your data in a portable format.
+• File a complaint with relevant data protection authorities if you believe your rights have
+been violated.
+7. Retention of Data
+We retain your data for as long as necessary to provide services and comply with legal
+obligations. Medical records are maintained in accordance with healthcare regulations and
+industry standards. If you close your account, we may retain some data to fulfill legal,
+regulatory, or security requirements.
+8. Cookies and Tracking Technologies
+Our platform uses cookies, web beacons, and other tracking technologies to:
+• Enhance user experience and personalize content.
+• Analyze trends, monitor traffic, and improve service functionality.
+• Recognize returning users and save preferences for a seamless experience.
+• Support marketing and advertising efforts in compliance with applicable laws.
+You may manage cookie preferences through your browser settings. However, disabling
+cookies may impact platform functionality.
+9. Third-Party Links
+MediFirst may contain links to third-party websites or services. We are not responsible for the
+privacy practices of these external sites. We encourage you to review the privacy policies of
+third-party platforms before sharing personal data.
+10. Children's Privacy
+MediFirst is not intended for use by children under the age of 18 without parental or guardian
+consent. If we become aware that a minor has provided personal information without proper
+consent, we will take steps to delete such information.
+11. International Data Transfers
+If you are accessing MediFirst from outside your country of residence, your information may be
+transferred and stored in a jurisdiction with different data protection laws. By using our
+services, you consent to such transfers in accordance with this Privacy Policy.
+12. Updates to This Policy
+We may update this Privacy Policy periodically. Any changes will be posted with a revised
+effective date. We encourage users to review this policy regularly to stay informed about how
+we protect their data.
+13. Contact Us
+For any questions, concerns, or requests regarding this Privacy Policy, please contact us at:
+MediFirst
+medicinefirst.1@gmail.com
+09011795914
+24, Olutosin Ajayi Street, Ajao Estate, Lagos State.
+By using MediFirst, you agree to the terms outlined in this Privacy Policy.
+
+Terms of Use for Patients
+1. Introduction
+Welcome to MediFirst, a telemedicine platform designed to provide virtual healthcare services.
+By using MediFirst, you agree to comply with these Terms of Use. If you do not agree, please
+refrain from using our platform. These terms outline your rights, responsibilities, and limitations
+when using MediFirst.
+2. Eligibility
+To use MediFirst, you must be at least 18 years old or have parental/guardian consent if you are
+a minor. By accessing our services, you confirm that you meet these eligibility requirements.
+You also warrant that you are not prohibited from using MediFirst under any applicable laws.
+3. Use of Services
+MediFirst provides remote healthcare consultations, medical advice, and prescription services.
+You agree to:
+• Use the platform only for lawful medical consultations.
+• Provide accurate and complete personal and medical information.
+• Follow healthcare provider recommendations.
+• Not misuse, abuse, or disrupt the platform’s services.
+• Not share your account credentials with others or permit unauthorized access to your
+account.
+• Use MediFirst services in compliance with all applicable medical and data protection
+laws.
+4. No Emergency Services
+MediFirst is not a replacement for emergency medical care. If you are experiencing a medical
+emergency, please call emergency services or visit the nearest hospital immediately. Our
+platform does not provide crisis intervention or life-threatening condition management.
+5. Privacy and Data Security
+Your personal and medical data will be collected and processed according to our Privacy
+Policy. We implement security measures to protect your data, but you are responsible for
+safeguarding your login credentials. By using MediFirst, you consent to our data collection,
+storage, and processing practices.
+6. Medical Disclaimers
+• MediFirst does not guarantee diagnoses, treatments, or outcomes.
+• Services are provided based on the information you provide; incorrect or incomplete
+information may impact the effectiveness of the consultation.
+• Our platform does not replace in-person medical evaluations where necessary.
+• Healthcare providers on MediFirst exercise independent medical judgment; MediFirst
+does not interfere with their decisions.
+• MediFirst is not liable for any adverse health outcomes resulting from the use of its
+services.
+7. Fees and Payments
+• MediFirst may charge consultation fees, which will be disclosed before you proceed.
+• Payments must be made through approved payment methods.
+• Refund policies will be subject to MediFirst’s discretion and applicable laws.
+• You are responsible for any additional charges imposed by your bank or payment
+provider.
+• MediFirst may modify its pricing structure with prior notice.
+8. User Conduct
+You agree not to:
+• Engage in fraudulent or misleading activities.
+• Impersonate another individual.
+• Harass, abuse, or harm healthcare providers or staff.
+• Use MediFirst for any illegal or unethical activities.
+• Attempt to gain unauthorized access to our systems or data.
+• Record or distribute consultations without explicit permission.
+9. Account Termination
+MediFirst reserves the right to suspend or terminate your account if you violate these Terms of
+Use or engage in any activity that jeopardizes the security or integrity of the platform. Upon
+termination, you may lose access to your medical history and consultation records, subject to
+legal retention requirements.
+10. Limitation of Liability
+• MediFirst is not responsible for technical failures, internet outages, or any service
+disruptions beyond our control.
+• We do not assume liability for any harm resulting from reliance on telemedicine
+consultations.
+• To the extent permitted by law, MediFirst shall not be held liable for indirect, incidental,
+or consequential damages.
+11. Changes to Terms
+MediFirst may update these Terms of Use periodically. Continued use of our services after
+changes indicates your acceptance of the updated terms. We recommend reviewing these
+terms regularly to stay informed about your rights and obligations.
+12. Governing Law and Dispute Resolution
+These Terms of Use shall be governed by the laws of the Federal Republic of Nigeria. Any
+disputes arising out of or relating to these terms shall be resolved through mediation or
+arbitration before resorting to legal proceedings.
+13. Contact Information
+For inquiries or support, contact us at:
+MediFirst
+medicinefirst.1@gmail.com
+09011795914
+24, Olutosin Ajayi Street, Ajao Estate, Lagos State.
+By using MediFirst, you acknowledge that you have read, understood, and agreed to these
+Terms of Use.
+
+Terms of Use for Medical Practitioners
+1. Introduction
+Welcome to MediFirst, a telemedicine platform that connects healthcare professionals with
+patients for virtual consultations. By using MediFirst as a medical practitioner, you agree to
+comply with these Terms of Use. If you do not agree, please refrain from using our platform.
+These terms outline your rights, responsibilities, and limitations when providing telemedicine
+services through MediFirst.
+2. Eligibility and Licensing
+To register as a medical practitioner on MediFirst, you must:
+• Hold a valid and active medical license in your jurisdiction.
+• Provide accurate, verifiable credentials and certifications.
+• Maintain professional liability insurance where required by law.
+• Adhere to all local, national, and international healthcare regulations governing
+telemedicine.
+MediFirst reserves the right to verify your credentials and suspend or terminate accounts that
+fail to meet regulatory requirements.
+3. Use of Services
+By using MediFirst, you agree to:
+• Provide ethical, professional, and evidence-based medical consultations.
+• Keep patient interactions confidential and comply with applicable data protection laws.
+• Accurately document all consultations and maintain proper medical records.
+• Prescribe medications responsibly, following applicable telemedicine regulations.
+• Refrain from engaging in fraudulent, misleading, or unethical activities.
+4. No Emergency or Critical Care Services
+MediFirst is not a substitute for emergency medical services. You must advise patients
+experiencing medical emergencies to seek immediate in-person care and contact emergency
+services.
+5. Privacy, Confidentiality, and Data Protection
+As a healthcare provider, you are responsible for safeguarding patient data. You agree to:
+• Comply with relevant privacy laws (e.g., HIPAA, GDPR) when handling patient data.
+• Maintain confidentiality of patient health information and records.
+• Not share or disclose patient data without explicit consent, except as required by law.
+MediFirst implements industry-standard security measures, but you are responsible for taking
+necessary precautions to protect your account and prevent unauthorized access.
+6. Medical Responsibilities and Disclaimers
+• You acknowledge that you are solely responsible for the medical advice and treatment
+provided to patients.
+• MediFirst does not interfere with your medical judgment but reserves the right to
+investigate complaints regarding professional conduct.
+• You must ensure that your telemedicine consultations comply with best medical
+practices and legal requirements.
+• MediFirst is not responsible for any malpractice claims or legal disputes arising from
+your consultations.
+7. Fees, Payments, and Revenue Sharing
+• MediFirst may charge a platform fee or commission for each consultation.
+• Payouts for services rendered will be processed as per MediFirst’s payment schedule.
+• You agree to set consultation fees within the platform’s guidelines and comply with
+refund policies where applicable.
+• You are responsible for reporting and paying applicable taxes on your earnings.
+8. Professional Conduct and User Interactions
+You agree to:
+• Treat patients with professionalism, respect, and ethical integrity.
+• Avoid discrimination, harassment, or inappropriate behavior in any form.
+• Follow telemedicine best practices and provide accurate medical advice.
+• Report any unethical or illegal activity encountered on the platform.
+MediFirst reserves the right to investigate and take appropriate action, including suspension or
+termination, in cases of misconduct.
+9. Account Suspension and Termination
+MediFirst may suspend or terminate your account if you:
+• Provide false or misleading credentials.
+• Violate medical or data protection laws.
+• Engage in misconduct, fraud, or unethical practices.
+• Fail to adhere to MediFirst’s guidelines and professional standards.
+Termination may result in loss of access to patient records and pending payments, subject to
+regulatory and contractual obligations.
+10. Liability and Indemnification
+• MediFirst is not liable for any medical malpractice, negligence claims, or legal disputes
+arising from your practice.
+• You agree to indemnify and hold MediFirst harmless from any claims, damages, or
+liabilities related to your consultations.
+• MediFirst is not responsible for platform downtimes, technical failures, or external
+disruptions beyond our control.
+11. Changes to Terms
+MediFirst may update these Terms of Use periodically. Continued use of our services after
+changes indicates your acceptance of the updated terms. You are encouraged to review these
+terms regularly.
+12. Governing Law and Dispute Resolution
+These Terms of Use shall be governed by the laws of the Federal Republic of Nigeria. Any
+disputes arising out of or relating to these terms shall be resolved through mediation or
+arbitration before resorting to legal proceedings.
+13. Contact Information
+For inquiries or support, contact us at:
+MediFirst
+medicinefirst.1@gmail.com
+09011795914
+24, Olutosin Ajayi Street, Ajao Estate, Lagos State.
+By using MediFirst as a medical practitioner, you acknowledge that you have read, understood,
+and agreed to these Terms of Use.
