@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:nigerian_states_and_lga/nigerian_states_and_lga.dart';
 
@@ -7,7 +6,10 @@ import '../../theming/palette.dart';
 class StateAndLGADropdown extends StatefulWidget {
   final TextEditingController stateController;
   final TextEditingController lgaController;
-  const StateAndLGADropdown({Key? key, required this.stateController, required this.lgaController}) : super(key: key);
+
+  const StateAndLGADropdown(
+      {Key? key, required this.stateController, required this.lgaController})
+      : super(key: key);
 
   @override
   _StateAndLGADropdownState createState() => _StateAndLGADropdownState();
@@ -22,10 +24,16 @@ class _StateAndLGADropdownState extends State<StateAndLGADropdown> {
   @override
   void initState() {
     super.initState();
-    _selectedState = NigerianStatesAndLGA.allStates.first;
-    _selectedLGA = NigerianStatesAndLGA.getStateLGAs(_selectedState).first;
     _stateController = widget.stateController;
     _lgaController = widget.lgaController;
+    // ← use whatever is already in the controllers, fall back only if empty
+    _selectedState = _stateController.text.isNotEmpty
+        ? _stateController.text
+        : NigerianStatesAndLGA.allStates.first;
+    _selectedLGA = _lgaController.text.isNotEmpty
+        ? _lgaController.text
+        : NigerianStatesAndLGA.getStateLGAs(_selectedState).first;
+    // keep the controllers in‑sync
     _stateController.text = _selectedState;
     _lgaController.text = _selectedLGA;
   }
@@ -42,7 +50,8 @@ class _StateAndLGADropdownState extends State<StateAndLGADropdown> {
             builder: (FormFieldState<String> state) {
               return InputDecorator(
                 decoration: InputDecoration(
-                  hintStyle: Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
+                  hintStyle:
+                      Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
                     fontSize: 16,
                     color: Palette.hintTextGray,
                   ),
@@ -50,7 +59,8 @@ class _StateAndLGADropdownState extends State<StateAndLGADropdown> {
                   filled: true,
                   fillColor: Palette.whiteColor,
                   enabledBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Palette.hintTextGray, width: 1),
+                    borderSide:
+                        BorderSide(color: Palette.hintTextGray, width: 1),
                   ),
                   focusedBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(color: Palette.mainGreen, width: 1),
@@ -71,17 +81,21 @@ class _StateAndLGADropdownState extends State<StateAndLGADropdown> {
                           setState(() {
                             _selectedState = newValue;
                             _stateController.text = newValue;
-                            _selectedLGA = NigerianStatesAndLGA.getStateLGAs(newValue).first;
+                            _selectedLGA =
+                                NigerianStatesAndLGA.getStateLGAs(newValue)
+                                    .first;
                             _lgaController.text = _selectedLGA;
                           });
                         }
                       },
-                      items: NigerianStatesAndLGA.allStates.map<DropdownMenuItem<String>>((String value) {
+                      items: NigerianStatesAndLGA.allStates
+                          .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(
                             value,
-                            style: Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
+                            style: Palette.lightModeAppTheme.textTheme.bodySmall
+                                ?.copyWith(
                               fontSize: 16,
                               color: Palette.blackColor,
                             ),
@@ -102,7 +116,8 @@ class _StateAndLGADropdownState extends State<StateAndLGADropdown> {
             builder: (FormFieldState<String> state) {
               return InputDecorator(
                 decoration: InputDecoration(
-                  hintStyle: Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
+                  hintStyle:
+                      Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
                     fontSize: 16,
                     color: Palette.hintTextGray,
                   ),
@@ -110,7 +125,8 @@ class _StateAndLGADropdownState extends State<StateAndLGADropdown> {
                   filled: true,
                   fillColor: Palette.whiteColor,
                   enabledBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Palette.hintTextGray, width: 1),
+                    borderSide:
+                        BorderSide(color: Palette.hintTextGray, width: 1),
                   ),
                   focusedBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(color: Palette.mainGreen, width: 1),
@@ -140,7 +156,8 @@ class _StateAndLGADropdownState extends State<StateAndLGADropdown> {
                           value: value,
                           child: Text(
                             value,
-                            style: Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
+                            style: Palette.lightModeAppTheme.textTheme.bodySmall
+                                ?.copyWith(
                               fontSize: 16,
                               color: Palette.blackColor,
                             ),

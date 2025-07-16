@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medifirst/core/constants/data.dart';
-import 'package:medifirst/models/doctor_info.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/theming/palette.dart';
@@ -25,24 +24,18 @@ class _DoctorHomeScreenState extends ConsumerState<DoctorHomeScreen> {
     });
   }
 
-  void _setupMessagingWhenUserAvailable() async {
-    ref.listen<DoctorInfo?>(doctorProvider, (previous, next) {
-      if (next != null) {
-        setupFirebaseMessaging(Constants.patientCategory, next.doctorId);
-      }
-    });
-  }
-
   @override
   void initState() {
     super.initState();
+    setupFirebaseMessaging(
+        Constants.doctorCategory, ref.read(doctorProvider)!.doctorId);
   }
 
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.sizeOf(context).height;
     final double width = MediaQuery.sizeOf(context).width;
-    _setupMessagingWhenUserAvailable();
+
     return DefaultTabController(
       length: 5,
       child: Scaffold(
@@ -58,11 +51,13 @@ class _DoctorHomeScreenState extends ConsumerState<DoctorHomeScreen> {
             indicatorColor: Palette.whiteColor,
             unselectedLabelColor: Palette.dividerGray,
             isScrollable: false,
-            labelStyle: Palette.lightModeAppTheme.textTheme.bodyMedium?.copyWith(
+            labelStyle:
+                Palette.lightModeAppTheme.textTheme.bodyMedium?.copyWith(
               fontSize: 8,
               color: Palette.whiteColor,
             ),
-            unselectedLabelStyle: Palette.lightModeAppTheme.textTheme.bodyMedium?.copyWith(
+            unselectedLabelStyle:
+                Palette.lightModeAppTheme.textTheme.bodyMedium?.copyWith(
               fontSize: 8,
               color: Palette.dividerGray,
             ),

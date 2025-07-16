@@ -9,7 +9,6 @@ import 'package:medifirst/core/widgets/elements/loader.dart';
 import 'package:medifirst/doctor_app/features/doctor_settings/controller/doctor_settings_controller.dart';
 import 'package:medifirst/doctor_app/features/transactions/presentation/widgets/withdraw_modal.dart';
 import 'package:medifirst/features/auth/controller/auth_controller.dart';
-import 'package:medifirst/models/doctor_info.dart';
 
 import '../../constants/data.dart';
 
@@ -142,10 +141,11 @@ class _DoctorWalletBalanceCardState
               onTap: () {
                 showModalBottomSheet(
                     isScrollControlled: true,
-                    context: context, builder: (context) => const WithdrawalModal());
+                    context: context,
+                    builder: (context) => const WithdrawalModal());
               },
               child: const ActionButtonContainer(
-                title: 'Withdraw',
+                title: 'Save Account',
                 width: 322,
                 backGroundColor: Palette.whiteColor,
                 titleColor: Palette.discountGreen,

@@ -77,8 +77,6 @@ class TransactionsRepository {
         'accountNumber': accountNumber,
       }, SetOptions(merge: true)); // Use merge to update only these fields
 
-      print('Bank details updated successfully.');
-
       return right('Successful');
     } on FirebaseException catch (e) {
       throw e.message!;

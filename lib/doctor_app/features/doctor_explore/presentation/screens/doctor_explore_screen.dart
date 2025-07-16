@@ -8,7 +8,6 @@ import 'package:medifirst/core/widgets/atoms/top_rated_doctor_bar.dart';
 import 'package:medifirst/core/widgets/elements/error_text.dart';
 import 'package:medifirst/core/widgets/elements/loader.dart';
 import 'package:medifirst/core/widgets/molecules/appoint_request_bar.dart';
-import 'package:medifirst/core/widgets/molecules/error_modal.dart';
 import 'package:medifirst/doctor_app/features/appointment_list/controller/appointment_list_controller.dart';
 import 'package:medifirst/doctor_app/features/appointment_list/presentation/screens/appointment_list_screen.dart';
 import 'package:medifirst/doctor_app/features/doctor_calls/presentation/screens/doctor_chat_page.dart';
@@ -36,7 +35,7 @@ class _DoctorExploreScreenState extends ConsumerState<DoctorExploreScreen> {
   Future<void> initZegoCall() async {
     await ZegoUIKitPrebuiltCallInvitationService().init(
       appID: int.parse(
-          const String.fromEnvironment('zegoCloudAppId', defaultValue: '')),
+          const String.fromEnvironment('zegoCloudAppId', defaultValue: '1')),
       appSign:
           const String.fromEnvironment('zegoCloudAppSign', defaultValue: ''),
       userID: ref.read(doctorProvider)?.doctorId ?? 'Guest',
@@ -49,26 +48,6 @@ class _DoctorExploreScreenState extends ConsumerState<DoctorExploreScreen> {
   void initState() {
     super.initState();
     initZegoCall();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkDoctorLogin();
-    });
-  }
-
-  void _checkDoctorLogin() {
-    Future.delayed(const Duration(seconds: 1), () {
-      if (mounted) {
-        final doctor = ref.read(doctorProvider);
-        if (doctor == null) {
-          showModalBottomSheet(
-            context: context,
-            builder: (context) => const ErrorModal(
-              message:
-                  'Please close the app and sign into the correct category',
-            ),
-          );
-        }
-      }
-    });
   }
 
   @override

@@ -1,5 +1,4 @@
-
-class FirebaseConstants{
+class FirebaseConstants {
   static String usersCollection = 'users';
   static String ordersCollection = 'orders';
   static String cartCollection = 'cart';
@@ -14,4 +13,5 @@ class FirebaseConstants{
   static String messagesCollection = 'messages';
   static String walletsCollection = 'wallets';
   static String transactionsCollection = 'transactions';
+  static String withdrawalsCollection = 'withdrawals';
 }

@@ -1,5 +1,5 @@
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:medifirst/doctor_app/features/appointment_list/presentation/screens/appointment_list_screen.dart';
 import 'package:medifirst/doctor_app/features/doctor_explore/presentation/screens/doctor_explore_screen.dart';
 import 'package:medifirst/doctor_app/features/doctor_notifications/presentation/screens/doctor_notifications.dart';
@@ -10,13 +10,8 @@ import 'package:medifirst/features/my_lists/presentation/screens/my_orders_scree
 import 'package:medifirst/features/notifications/presentation/screens/notification_screen.dart';
 import 'package:medifirst/features/settings/presentation/screens/settings_screen.dart';
 import 'package:medifirst/features/wallet/presentation/screens/wallet_screen.dart';
-import 'package:medifirst/pharmacy_app/features/pharmacy_explore/presentation/screens/pharmacy_explore_screen.dart';
-import 'package:medifirst/pharmacy_app/features/pharmacy_notification/presentation/screens/pharmacy_notification.dart';
-import 'package:medifirst/pharmacy_app/features/pharmacy_settings/presentation/screens/pharmacy_settings_screen.dart';
 
 class Data {
-
-
   static NumberFormat numberFormat = NumberFormat('#,##0.00', 'en_US');
   static NumberFormat balanceFormat = NumberFormat('#,##0', 'en_US');
 
@@ -51,14 +46,14 @@ class Data {
   };
 
   static Map<int, String> transactionType = {
-    1:'Withdrawal',
+    1: 'Withdrawal',
     2: 'Deposit',
     3: 'Receive money',
     4: 'Send money'
   };
 
   static Map<int, String> transactionLogo = {
-    1 : 'assets/icons/svgs/transactions/withdrawal.svg',
+    1: 'assets/icons/svgs/transactions/withdrawal.svg',
     2: 'assets/icons/svgs/transactions/deposit.svg',
     3: 'assets/icons/svgs/transactions/credit.svg',
     4: 'assets/icons/svgs/transactions/debit.svg'
@@ -80,11 +75,10 @@ class Data {
     const DoctorSettingsScreen(),
   ];
 
-  static List<Widget> pharmacyPages = [
-    const PharmacyExploreScreen(),
-    Container(),
-    const PharmacyNotificationScreen(),
-    const PharmacySettingsScreen(),
-  ];
-
+  // static List<Widget> pharmacyPages = [
+  //   const PharmacyExploreScreen(),
+  //   Container(),
+  //   const PharmacyNotificationScreen(),
+  //   const PharmacySettingsScreen(),
+  // ];
 }

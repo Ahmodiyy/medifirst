@@ -25,11 +25,13 @@ class _WithdrawalModalState extends ConsumerState<WithdrawalModal> {
     super.initState();
     _bankController = TextEditingController();
     _accountController = TextEditingController();
+    _amountController = TextEditingController();
   }
 
   @override
   void dispose() {
     _bankController.dispose();
+    _accountController.dispose();
     _accountController.dispose();
     super.dispose();
   }
@@ -115,6 +117,29 @@ class _WithdrawalModalState extends ConsumerState<WithdrawalModal> {
               ),
             ),
             Flexible(child: Container()),
+            // Text(
+            //   'Amount',
+            //   style: Palette.lightModeAppTheme.textTheme.bodyLarge?.copyWith(
+            //     fontSize: 10,
+            //     color: Palette.highlightTextGray,
+            //   ),
+            // ).alignLeft(),
+            // (size.height * 12 / 852).pv,
+            // TextField(
+            //   controller: _amountController,
+            //   keyboardType: TextInputType.number,
+            //   style: Palette.lightModeAppTheme.textTheme.bodyMedium?.copyWith(
+            //     fontSize: 16,
+            //   ),
+            //   decoration: const InputDecoration(
+            //     enabledBorder: UnderlineInputBorder(
+            //       borderSide: BorderSide(color: Palette.avatarGray),
+            //     ),
+            //     focusedBorder: UnderlineInputBorder(
+            //       borderSide: BorderSide(color: Palette.mainGreen),
+            //     ),
+            //   ),
+            // ),
             InkWell(
               onTap: () async {
                 _isLoading = true;

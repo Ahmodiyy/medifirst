@@ -1,25 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medifirst/core/constants/constants.dart';
 import 'package:medifirst/core/theming/palette.dart';
 import 'package:medifirst/core/theming/spaces.dart';
 import 'package:medifirst/core/widgets/atoms/phone_text_field.dart';
 import 'package:medifirst/core/widgets/atoms/underlined_text_field.dart';
 import 'package:medifirst/core/widgets/elements/action_button_container.dart';
-import 'package:medifirst/core/widgets/elements/outline_button.dart';
 import 'package:medifirst/doctor_app/features/home/presentation/doctor_home_screen.dart';
 import 'package:medifirst/features/auth/presentation/screens/password_reset-screen.dart';
 import 'package:medifirst/features/auth/presentation/screens/privacy_terms_screen.dart';
 import 'package:medifirst/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:medifirst/features/home/presentation/screens/home_screen.dart';
-import 'package:medifirst/models/healthcare_centre_info.dart';
-import 'package:medifirst/models/user_info.dart';
-import 'package:medifirst/pharmacy_app/features/pharmacy_home/presentation/screens/pharmacy_home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/widgets/molecules/error_modal.dart';
-import '../../../../models/doctor_info.dart';
 import '../../controller/auth_controller.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -31,6 +25,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 extension MediaQueryValues on BuildContext {
   double get mediaQueryWidth => MediaQuery.of(this).size.width;
+
   double get mediaQueryHeight => MediaQuery.of(this).size.height;
 }
 
@@ -44,16 +39,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool isEmail = true;
   bool isLoading = false;
 
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
-     getCategory();
+    getCategory();
     _emailController = TextEditingController();
     _pwController = TextEditingController();
     _phoneController = TextEditingController();
     _codeController = TextEditingController(text: '+234');
   }
+
   void getCategory() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -70,8 +65,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
-
-  Future<void> login({required WidgetRef ref, required BuildContext context}) async {
+  Future<void> login(
+      {required WidgetRef ref, required BuildContext context}) async {
     setState(() {
       isLoading = true;
     });
@@ -82,54 +77,35 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (!isEmail &&
           _phoneController.text.isNotEmpty &&
           _codeController.text.isNotEmpty) {
-        debugPrint('${_codeController.text}${_phoneController.text}');
-        await controller.loginUserWithNumber(
-            '${_codeController.text}${_phoneController.text}', context);
-        // Navigator.pop(context);
       } else if (isEmail &&
           _emailController.text.isNotEmpty &&
           _pwController.text.isNotEmpty) {
-        print('--------------LOGIN IN WITH EMAIL AND PASSWORD---------------');
         await controller.loginUserWithEmail(
             email: _emailController.text, password: _pwController.text);
-
       }
       switch (category) {
         case Constants.patientCategory:
           ref.listenManual(userProvider, (previous, next) {
-            //if (previous == null && next != null) {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
-            //}
-          }, onError: (er, st){
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const HomeScreen()));
+          }, onError: (er, st) {
             throw Exception('$er $st');
           }, fireImmediately: true);
           break;
         case Constants.doctorCategory:
           ref.listenManual(doctorProvider, (previous, next) {
-            debugPrint('-------------logiing email and password ----------');
-           // if (previous == null && next != null) {
-              debugPrint('-------------doctor logging in ----------');
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DoctorHomeScreen()));
-            //}
-          }, onError: (er, st){
-            throw Exception('$er $st');
-          });
-          break;
-        case Constants.pharmacyCategory:
-          ref.listenManual(pharmacyProvider, (previous, next) {
-            //if (previous == null && next != null) {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const PharmacyHomeScreen()));
-            //}
-          }, onError: (er, st){
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const DoctorHomeScreen()));
+          }, onError: (er, st) {
             throw Exception('$er $st');
           }, fireImmediately: true);
           break;
       }
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool(Constants.isLogin, true);
-
     } catch (e, st) {
-      print("........LOGIN ERROR....... => $e $st");
       FocusScope.of(context).unfocus();
       await Future.delayed(const Duration(milliseconds: 500));
       showModalBottomSheet(
@@ -145,7 +121,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       isLoading = false;
     });
   }
-  void loginWithGoogle({required WidgetRef ref, required BuildContext context}) async {
+
+  void loginWithGoogle(
+      {required WidgetRef ref, required BuildContext context}) async {
     setState(() {
       isLoading = true;
     });
@@ -211,25 +189,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                 ).alignLeft(),
                 /**
-                (size.height * 7 / 852).pv,
-                GestureDetector(
-                  onTap: () {
+                    (size.height * 7 / 852).pv,
+                    GestureDetector(
+                    onTap: () {
                     setState(() {
-                      isEmail = !isEmail;
+                    isEmail = !isEmail;
                     });
-                  },
-                  child: Text(
+                    },
+                    child: Text(
                     (isEmail)
-                        ? 'Sign in with phone number'
-                        : 'Sign in with email',
+                    ? 'Sign in with phone number'
+                    : 'Sign in with email',
                     style:
-                        Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
-                      fontSize: 14,
-                      color: Palette.blueText,
+                    Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
+                    fontSize: 14,
+                    color: Palette.blueText,
                     ),
-                  ).alignRight(),
-                ),
-                    **/
+                    ).alignRight(),
+                    ),
+                 **/
                 (size.height * 61 / 852).pv,
                 (isEmail)
                     ? UnderlinedTextField(
@@ -267,10 +245,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 (size.height * 20 / 852).pv,
                 (isEmail)
                     ? InkWell(
-                  onTap: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const PasswordResetScreen()));
-                  },
-                      child: Text(
+                        onTap: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const PasswordResetScreen()));
+                        },
+                        child: Text(
                           'Forgot password?',
                           style: Palette.lightModeAppTheme.textTheme.bodySmall
                               ?.copyWith(
@@ -278,7 +260,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             fontSize: 16,
                           ),
                         ).alignLeft(),
-                    )
+                      )
                     : Container(),
                 (size.height * 51 / 852).pv,
                 InkWell(
@@ -309,7 +291,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const PrivacyTermsScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => const PrivacyTermsScreen()),
                         );
                       },
                       child: Text(
@@ -325,26 +308,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 (size.height * 40.5 / 852).pv,
                 /**
-                const OutlineButton(
+                    const OutlineButton(
                     icon: Icon(
-                      Icons.apple,
-                      color: Palette.blackColor,
-                      size: 24,
+                    Icons.apple,
+                    color: Palette.blackColor,
+                    size: 24,
                     ),
                     label: 'Continue with Apple'),
-                (size.height * 8 / 852).pv,
-                InkWell(
-                  onTap: () => loginWithGoogle(ref: ref, context: context),
-                  child: OutlineButton(
-                      icon: SvgPicture.asset(
-                        'assets/icons/svgs/google.svg',
-                        height: 24,
-                        width: 24,
-                      ),
-                      label: 'Continue with Google'),
-                ),
-                (size.height * 24 / 852).pv,
-                    **/
+                    (size.height * 8 / 852).pv,
+                    InkWell(
+                    onTap: () => loginWithGoogle(ref: ref, context: context),
+                    child: OutlineButton(
+                    icon: SvgPicture.asset(
+                    'assets/icons/svgs/google.svg',
+                    height: 24,
+                    width: 24,
+                    ),
+                    label: 'Continue with Google'),
+                    ),
+                    (size.height * 24 / 852).pv,
+                 **/
                 InkWell(
                   onTap: () {
                     Navigator.pushReplacement(
@@ -399,29 +382,24 @@ class CategoryNavigator extends ConsumerWidget {
       case Constants.patientCategory:
         ref.listenManual(userProvider, (previous, next) {
           if (previous == null && next != null) {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const HomeScreen()));
           }
-        }, onError: (er, st){
+        }, onError: (er, st) {
           throw Exception('$er $st');
         }, fireImmediately: true);
         break;
       case Constants.doctorCategory:
         ref.listenManual(doctorProvider, (previous, next) {
           if (previous == null && next != null) {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DoctorHomeScreen()));
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const DoctorHomeScreen()));
           }
-        }, onError: (er, st){
+        }, onError: (er, st) {
           throw Exception('$er $st');
         });
-        break;
-      case Constants.pharmacyCategory:
-        ref.listenManual(pharmacyProvider, (previous, next) {
-          if (previous == null && next != null) {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const PharmacyHomeScreen()));
-          }
-        }, onError: (er, st){
-          throw Exception('$er $st');
-        }, fireImmediately: true);
         break;
     }
     return const SizedBox.shrink(); // Or any other placeholder widget

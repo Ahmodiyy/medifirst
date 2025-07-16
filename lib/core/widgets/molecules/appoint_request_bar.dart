@@ -11,11 +11,13 @@ import 'package:medifirst/models/appointment_info.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-
-
 class AppointmentRequestBar extends ConsumerStatefulWidget {
   final AppointmentInfo request;
-  const AppointmentRequestBar({super.key, required this.request,});
+
+  const AppointmentRequestBar({
+    super.key,
+    required this.request,
+  });
 
   @override
   ConsumerState createState() => _AppointRequestBarState();
@@ -23,13 +25,16 @@ class AppointmentRequestBar extends ConsumerStatefulWidget {
 
 class _AppointRequestBarState extends ConsumerState<AppointmentRequestBar> {
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
   Future<void> initializeNotifications() async {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     const AndroidInitializationSettings androidInitializationSettings =
-    AndroidInitializationSettings("@mipmap/ic_launcher");
-    const DarwinInitializationSettings iOSInitializationSettings = DarwinInitializationSettings();
+        AndroidInitializationSettings("@mipmap/ic_launcher");
+    const DarwinInitializationSettings iOSInitializationSettings =
+        DarwinInitializationSettings();
 
-    const InitializationSettings initializationSettings = InitializationSettings(
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
       android: androidInitializationSettings,
       iOS: iOSInitializationSettings,
     );
@@ -40,14 +45,19 @@ class _AppointRequestBarState extends ConsumerState<AppointmentRequestBar> {
     );
 
     await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.requestNotificationsPermission();
     tz.initializeTimeZones(); // Initialize timezone database
   }
-  Future<void> onDidReceiveNotification(NotificationResponse notificationResponse) async {
+
+  static Future<void> onDidReceiveNotification(
+      NotificationResponse notificationResponse) async {
     print("Notification receive");
   }
-  Future<void> scheduleNotification( int id, String title, String body, DateTime scheduledTime) async {
+
+  Future<void> scheduleNotification(
+      int id, String title, String body, DateTime scheduledTime) async {
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
       title,
@@ -62,10 +72,12 @@ class _AppointRequestBarState extends ConsumerState<AppointmentRequestBar> {
           priority: Priority.high,
         ),
       ),
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.dateAndTime,
     );
   }
+
   @override
   void initState() {
     super.initState();
@@ -74,18 +86,22 @@ class _AppointRequestBarState extends ConsumerState<AppointmentRequestBar> {
 
   @override
   Widget build(BuildContext context) {
-    final request =  widget.request;
+    final request = widget.request;
     final Size size = MediaQuery.sizeOf(context);
     return SectionContainer(
-      height: size.height * 110/852,
+      height: size.height * 110 / 852,
       child: SizedBox(
         width: double.infinity,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
-            Card53Image(imgUrl: request.patientImageURL,height: 50, width: 50,),
-            (size.width * 12/393).ph,
+            Card53Image(
+              imgUrl: request.patientImageURL,
+              height: 50,
+              width: 50,
+            ),
+            (size.width * 12 / 393).ph,
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,69 +109,98 @@ class _AppointRequestBarState extends ConsumerState<AppointmentRequestBar> {
                 children: [
                   Text(
                     request.patientName,
-                    style: Palette.lightModeAppTheme.textTheme.titleSmall?.copyWith(
+                    style: Palette.lightModeAppTheme.textTheme.titleSmall
+                        ?.copyWith(
                       letterSpacing: -0.4,
                     ),
                   ),
-                  (size.height * 8/852).pv,
+                  (size.height * 8 / 852).pv,
                   RichText(
                     text: TextSpan(
-                        text: DateFormat('dd/MM/yyyy').format(request.startTime.toDate()),
-                        style: Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
+                        text: DateFormat('dd/MM/yyyy')
+                            .format(request.startTime.toDate()),
+                        style: Palette.lightModeAppTheme.textTheme.bodySmall
+                            ?.copyWith(
                           letterSpacing: -0.4,
                           color: Palette.smallBodyGray,
                         ),
                         children: [
                           TextSpan(
                             text: '   ',
-                            style: Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
+                            style: Palette.lightModeAppTheme.textTheme.bodySmall
+                                ?.copyWith(
                               letterSpacing: -0.4,
                               color: Palette.smallBodyGray,
                             ),
                           ),
                           TextSpan(
-                            text: DateFormat.jm().format(request.startTime.toDate()),
-                            style: Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
+                            text: DateFormat.jm()
+                                .format(request.startTime.toDate()),
+                            style: Palette.lightModeAppTheme.textTheme.bodySmall
+                                ?.copyWith(
                               letterSpacing: -0.4,
                               color: Palette.smallBodyGray,
                             ),
                           )
-                        ]
-                    ),
+                        ]),
                   ),
-                  (size.height * 24/852).pv,
+                  (size.height * 24 / 852).pv,
                   SizedBox(
                     width: double.infinity,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         InkWell(
-                          onTap: ()async{
-                            try{
-                              await ref.read(appointmentListControllerProvider).acceptAppointmentRequest(request);
-                              DateTime? remindTime = request.startTime.toDate().subtract(const Duration(minutes: 10));
-                              await scheduleNotification(DateTime.now().millisecondsSinceEpoch % 2147483647, 'Session Time', "It is almost time for your session", remindTime);
-                            }catch(e){
-                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('An error occurred')));
+                          onTap: () async {
+                            try {
+                              await ref
+                                  .read(appointmentListControllerProvider)
+                                  .acceptAppointmentRequest(request);
+                              DateTime? remindTime = request.startTime
+                                  .toDate()
+                                  .subtract(const Duration(minutes: 5));
+                              await scheduleNotification(
+                                  DateTime.now().millisecondsSinceEpoch %
+                                      2147483647,
+                                  'Session Time',
+                                  "It is almost time for your session",
+                                  remindTime);
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(e.toString())));
                             }
                           },
-                          child: Text('Accept', style: Palette.lightModeAppTheme.textTheme.bodyMedium?.copyWith(
-                            color: Palette.validationGreen,
-                            fontSize: 14,
-                          ),),
+                          child: Text(
+                            'Accept',
+                            style: Palette
+                                .lightModeAppTheme.textTheme.bodyMedium
+                                ?.copyWith(
+                              color: Palette.validationGreen,
+                              fontSize: 14,
+                            ),
+                          ),
                         ),
                         InkWell(
-                          onTap: ()async{
-                            try{
-                              await ref.read(appointmentListControllerProvider).rejectAppointmentRequest(request);
-                            }catch(e){
-                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('An error occurred')));
+                          onTap: () async {
+                            try {
+                              await ref
+                                  .read(appointmentListControllerProvider)
+                                  .rejectAppointmentRequest(request);
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('An error occurred')));
                             }
                           },
-                          child: Text('Reject', style: Palette.lightModeAppTheme.textTheme.bodyMedium?.copyWith(
-                            color: Palette.redTextColor,
-                            fontSize: 14,
-                          ),),
+                          child: Text(
+                            'Reject',
+                            style: Palette
+                                .lightModeAppTheme.textTheme.bodyMedium
+                                ?.copyWith(
+                              color: Palette.redTextColor,
+                              fontSize: 14,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -164,10 +209,8 @@ class _AppointRequestBarState extends ConsumerState<AppointmentRequestBar> {
               ),
             ),
           ],
-        ).sidePad(size.width * 20/393).topPad(8),
+        ).sidePad(size.width * 20 / 393).topPad(8),
       ),
     );
   }
-
-
 }

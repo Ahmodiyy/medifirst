@@ -36,7 +36,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
   Future<void> initZegoCall() async {
     await ZegoUIKitPrebuiltCallInvitationService().init(
       appID: int.parse(
-          const String.fromEnvironment('zegoCloudAppId', defaultValue: '')),
+          const String.fromEnvironment('zegoCloudAppId', defaultValue: '1')),
       appSign:
           const String.fromEnvironment('zegoCloudAppSign', defaultValue: ''),
       userID: ref.read(userProvider)?.uid ?? 'Guest',

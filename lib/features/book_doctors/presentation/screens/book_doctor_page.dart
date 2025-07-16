@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:medifirst/core/theming/spaces.dart';
 import 'package:medifirst/core/widgets/elements/action_button_container.dart';
@@ -97,10 +100,32 @@ class _BookDoctorPageState extends ConsumerState<BookDoctorPage> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    initializeNotifications();
+  Future<void> sendNotificationToDoctor({
+    required String fcmToken,
+    required String title,
+    required String body,
+  }) async {
+    final Uri url =
+        Uri.parse('https://sendnotification-eroshkcipq-uc.a.run.app');
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'token': fcmToken,
+          'title': title,
+          'body': body,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print("✅ Notification sent successfully!");
+      } else {
+        print("❌ Failed to send notification: ${response.body}");
+      }
+    } catch (e) {
+      print("⚠️ Error sending notification: $e");
+    }
   }
 
   Future<void> setAppointment(
@@ -121,12 +146,16 @@ class _BookDoctorPageState extends ConsumerState<BookDoctorPage> {
             isScheduled: isRepeated);
         DateTime? remindTime =
             selectedDate?.subtract(Duration(minutes: _selectedTime));
-        debugPrint("This reminder time is  ${remindTime.toString()}");
+        await sendNotificationToDoctor(
+            fcmToken: widget.doctorInfo.fcmToken,
+            title: 'Appointment Booked',
+            body: 'You have a new appointment');
         await scheduleNotification(
             DateTime.now().millisecondsSinceEpoch % 2147483647,
             'Session Time',
             "It is almost time for your session",
             remindTime!);
+
         setState(() {
           loading = false;
         });
@@ -147,6 +176,12 @@ class _BookDoctorPageState extends ConsumerState<BookDoctorPage> {
           context: context,
           builder: (context) => ErrorModal(message: e.toString()));
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initializeNotifications();
   }
 
   @override

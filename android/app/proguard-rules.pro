@@ -3,3 +3,10 @@
 -dontwarn java.beans.ConstructorProperties
 -dontwarn java.beans.Transient
 -dontwarn org.w3c.dom.bootstrap.DOMImplementationRegistry
+-keep class * extends **.TypeToken
+-keep class com.google.firebase.** { *; }
+-keep class com.google.gson.** { *; }
+-keepattributes Signature
+-keep class com.google.gson.reflect.TypeToken
+-keep class * extends com.google.gson.reflect.TypeToken
+

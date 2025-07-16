@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:medifirst/core/constants/constants.dart';
-import 'package:medifirst/features/auth/presentation/screens/phone_verification_screen.dart';
 import 'package:medifirst/models/doctor_info.dart';
 import 'package:medifirst/models/healthcare_centre_info.dart';
 import 'package:medifirst/models/user_info.dart' as model;
@@ -74,18 +73,27 @@ class AuthRepository {
   Future<model.UserInfoModel> getUserDetails() async {
     User currentUser = _auth.currentUser!;
     DocumentSnapshot snapshot = await _users.doc(currentUser.uid).get();
+    if (!snapshot.exists) {
+      throw "Unable to get data, are you logging in on the correct app?";
+    }
     return model.UserInfoModel.fromMap(snapshot.data() as Map<String, dynamic>);
   }
 
   Future<DoctorInfo> getDoctorDetails() async {
     User currentUser = _auth.currentUser!;
     DocumentSnapshot snapshot = await _doctors.doc(currentUser.uid).get();
+    if (!snapshot.exists) {
+      throw "Unable to get data, are you logging in on the correct app?";
+    }
     return DoctorInfo.fromMap(snapshot.data() as Map<String, dynamic>);
   }
 
   Future<HealthcareCentreInfo> getPharmacyDetails() async {
     User currentUser = _auth.currentUser!;
     DocumentSnapshot snapshot = await _practices.doc(currentUser.uid).get();
+    if (!snapshot.exists) {
+      throw "Unable to get data, are you logging in on the correct app?";
+    }
     return HealthcareCentreInfo.fromMap(
         snapshot.data() as Map<String, dynamic>);
   }
@@ -240,123 +248,6 @@ class AuthRepository {
     }
   }
 
-  FutureVoid registerUserWithNumber(
-      String mobile, String name, String surname, BuildContext context) async {
-    final Completer<void> completer = Completer<void>();
-    try {
-      await _auth.verifyPhoneNumber(
-        phoneNumber: mobile,
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          try {
-            UserCredential userCred =
-                await _auth.signInWithCredential(credential);
-            print(
-                "Auto-verification completed for user: ${userCred.user?.uid}");
-            if (!completer.isCompleted) completer.complete();
-          } catch (e) {
-            print("Error in auto-verification: $e");
-            if (!completer.isCompleted) completer.completeError(e);
-          }
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          print("Verification failed: ${e.message}");
-          if (!completer.isCompleted) completer.completeError(e);
-        },
-        codeSent: (String verificationId, int? forceResendingToken) {
-          print("SMS code sent. Verification ID: $verificationId");
-          _forceResendingToken = forceResendingToken;
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => PhoneVerificationScreen(
-                        otp: verificationId,
-                        number: mobile,
-                        name: name,
-                        surname: surname,
-                        isFromSignUp: true,
-                      )));
-          // Don't complete the completer here, as we're waiting for user input
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          _verificationId = verificationId;
-          print("Auto retrieval timeout. Verification ID: $verificationId");
-        },
-        forceResendingToken: _forceResendingToken,
-      );
-      await completer.future;
-      return right(null);
-    } catch (e) {
-      print("Error in registerUserWithNumber: $e");
-      throw e;
-    }
-  }
-
-  FutureVoid loginUserWithNumber(String mobile, BuildContext context) async {
-    try {
-      DocumentSnapshot name = await _numbers.doc(mobile).get();
-      if (name.data() == null) {
-        throw Exception('Number has not be registered');
-      }
-      final json = name.data() as Map<String, dynamic>;
-      final number = json['number'];
-      if (number != null) {
-        final Completer<void> completer = Completer<void>();
-        try {
-          await _auth.verifyPhoneNumber(
-            phoneNumber: mobile,
-            verificationCompleted: (PhoneAuthCredential credential) async {
-              try {
-                UserCredential userCred =
-                    await _auth.signInWithCredential(credential);
-                print(
-                    "Auto-verification completed for user: ${userCred.user?.uid}");
-                if (!completer.isCompleted) completer.complete();
-              } catch (e) {
-                print("Error in auto-verification: $e");
-                if (!completer.isCompleted) completer.completeError(e);
-              }
-            },
-            verificationFailed: (FirebaseAuthException e) {
-              print("Verification failed: ${e.message}");
-              if (!completer.isCompleted) completer.completeError(e);
-            },
-            codeSent: (String verificationId, int? forceResendingToken) {
-              print("SMS code sent. Verification ID: $verificationId");
-              _forceResendingToken = forceResendingToken;
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => PhoneVerificationScreen(
-                            otp: verificationId,
-                            number: mobile,
-                            isFromSignUp: false,
-                          )));
-              // Don't complete the completer here, as we're waiting for user input
-            },
-            codeAutoRetrievalTimeout: (String verificationId) {
-              _verificationId = verificationId;
-              print("Auto retrieval timeout. Verification ID: $verificationId");
-            },
-            forceResendingToken: _forceResendingToken,
-          );
-          await completer.future;
-          return right(null);
-        } catch (e) {
-          print("Error in registerUserWithNumber: $e");
-          throw e;
-        }
-      } else {
-        throw Exception('Number does not exist');
-        // return left(Failure('An error occurred'));
-      }
-      return right(null);
-    } on FirebaseException catch (e) {
-      throw e.message!;
-    } catch (e) {
-      return left(Failure(e.toString()));
-    }
-  }
-
   FutureEither<String> registerUserWithEmail(
       {required String email,
       required String password,
@@ -429,24 +320,6 @@ class AuthRepository {
     }
   }
 
-  FutureEither<String> verifyOTPFromLogin({
-    required BuildContext context,
-    required String verificationId,
-    required String OTP,
-    required String number,
-  }) async {
-    try {
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
-          verificationId: verificationId, smsCode: OTP);
-      await _auth.signInWithCredential(credential);
-      return right('Success');
-    } on FirebaseException catch (e) {
-      rethrow;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
   FutureEither<String> saveUserInDatabase(
       {required String uid,
       required String name,
@@ -502,25 +375,6 @@ class AuthRepository {
               number: phone,
               licenseExpiration: licenseExpiration!);
           await _doctors.doc(doctor.doctorId).set(doctor.toMap());
-          break;
-        case Constants.pharmacyCategory:
-          HealthcareCentreInfo pharmacy = HealthcareCentreInfo(
-              latitude: 0,
-              longitude: 0,
-              pId: uid,
-              name: name,
-              pharmacyImgUrl: profilePic,
-              address: '',
-              number: phone,
-              type: '',
-              openingHours: const TimeOfDay(hour: 9, minute: 0),
-              closingHours: const TimeOfDay(hour: 17, minute: 0),
-              totalRating: 0,
-              noOfReviews: 0,
-              emergencyContact: '',
-              state: '',
-              lga: '');
-          await _practices.doc(pharmacy.pId).set(pharmacy.toMap());
           break;
       }
       final WalletInfo wallet = WalletInfo(uid: uid, balance: 0.0);

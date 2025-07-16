@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:medifirst/core/theming/palette.dart';
 import 'package:medifirst/core/theming/spaces.dart';
@@ -14,22 +13,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/atoms/phone_text_field.dart';
 import '../../../../core/widgets/elements/action_button_container.dart';
-import '../../../../core/widgets/elements/outline_button.dart';
 import '../../../../core/widgets/molecules/error_modal.dart';
 import '../../../../doctor_app/features/edit_doctor_profile/presentation/screens/edit_doctor_profile_screen.dart';
 import '../../../../doctor_app/features/home/presentation/doctor_home_screen.dart';
-import '../../../../pharmacy_app/features/pharmacy_home/presentation/screens/pharmacy_home_screen.dart';
-import '../../../book_doctors/presentation/widgets/set_time_section.dart';
 import '../../../home/presentation/screens/home_screen.dart';
-
 
 final signUpLoadingProvider = StateProvider<bool>((ref) {
   return false;
 });
 
 class SignUpScreen extends ConsumerStatefulWidget {
-
-   const SignUpScreen({super.key});
+  const SignUpScreen({super.key});
 
   @override
   ConsumerState createState() => _SignUpScreenState();
@@ -42,52 +36,57 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   late TextEditingController _phoneController;
   late TextEditingController _codeController;
   late TextEditingController _pwController;
-  late TextEditingController  _licenseController;
+  late TextEditingController _licenseController;
   late TextEditingController _experienceController;
   late TextEditingController _expertiseController;
-  late String category;
+  String category = '';
   DateTime? _selectedDate = DateTime.now();
   bool useEmail = true;
   bool obscured = true;
   bool isLoading = false;
 
-  Future<void> createAccount({required WidgetRef ref, required BuildContext context}) async {
+  Future<void> createAccount(
+      {required WidgetRef ref, required BuildContext context}) async {
     final sharedPrefs = await SharedPreferences.getInstance();
     final category = sharedPrefs.getString(Constants.appTypeKey);
-  if(category == Constants.doctorCategory ){
-    if(_licenseController.text.isEmpty || _experienceController.text.isEmpty || _selectedDate == null || _expertiseController.text.isEmpty){
-      return;
+    if (category == Constants.doctorCategory) {
+      if (_licenseController.text.isEmpty ||
+          _experienceController.text.isEmpty ||
+          _selectedDate == null ||
+          _expertiseController.text.isEmpty) {
+        return;
+      }
     }
-  }
-     ref.read(signUpLoadingProvider.notifier).update((state) => true,);
+    ref.read(signUpLoadingProvider.notifier).update(
+          (state) => true,
+        );
 
     try {
       AuthController controller = ref.read(authControllerProvider.notifier);
-      if (!useEmail &&
-          _phoneController.text.isNotEmpty &&
-          _nameController.text.isNotEmpty &&
-          _surnameController.text.isNotEmpty) {
-        await controller.registerUserWithNumber(_codeController.text + _phoneController.text,
-            _nameController.text, _surnameController.text, context);
-        return;
-      } else if (useEmail &&
+      if (useEmail &&
           _emailController.text.isNotEmpty &&
           _pwController.text.isNotEmpty &&
           _nameController.text.isNotEmpty &&
           _surnameController.text.isNotEmpty) {
-        if(category == Constants.doctorCategory ){
-          await controller.registerWithEmail(_nameController.text,
-              _surnameController.text, _emailController.text, _pwController.text,
-              license: _licenseController.text, experience: int.tryParse(_experienceController.text),
-              expertise: _expertiseController.text, licenseExpiration: _selectedDate);
+        if (category == Constants.doctorCategory) {
+          await controller.registerWithEmail(
+              _nameController.text,
+              _surnameController.text,
+              _emailController.text,
+              _pwController.text,
+              license: _licenseController.text,
+              experience: int.tryParse(_experienceController.text),
+              expertise: _expertiseController.text,
+              licenseExpiration: _selectedDate);
+          await navigateToHome();
+        } else {
+          await controller.registerWithEmail(
+              _nameController.text,
+              _surnameController.text,
+              _emailController.text,
+              _pwController.text);
           await navigateToHome();
         }
-        else{
-          await controller.registerWithEmail(_nameController.text,
-              _surnameController.text, _emailController.text, _pwController.text);
-          await navigateToHome();
-        }
-
       }
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool(Constants.isLogin, true);
@@ -104,67 +103,68 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         ),
       );
     }
-    ref.read(signUpLoadingProvider.notifier).update((state) => false,);
+    ref.read(signUpLoadingProvider.notifier).update(
+          (state) => false,
+        );
   }
+
   Future<void> navigateToHome() async {
     final sharedPrefs = await SharedPreferences.getInstance();
     final category = sharedPrefs.getString(Constants.appTypeKey);
-    debugPrint('------catergory in login---------${category}----------');
+
     switch (category) {
       case Constants.patientCategory:
         ref.listenManual(userProvider, (previous, next) {
-          // if (previous == null && next != null) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
-          //}
-        }, onError: (er, st){
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()));
+        }, onError: (er, st) {
           throw Exception('$er $st');
         }, fireImmediately: true);
         break;
       case Constants.doctorCategory:
         ref.listenManual(doctorProvider, (previous, next) {
-          // if (previous == null && next != null) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DoctorHomeScreen()));
-          //}
-        }, onError: (er, st){
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const DoctorHomeScreen()));
+        }, onError: (er, st) {
           throw Exception('$er $st');
         });
         break;
-      case Constants.pharmacyCategory:
-        ref.listenManual(pharmacyProvider, (previous, next) {
-          //if (previous == null && next != null) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const PharmacyHomeScreen()));
-          //}
-        }, onError: (er, st){
-          throw Exception('$er $st');
-        }, fireImmediately: true);
-        break;
     }
   }
+
   void signUpWithGoogle(WidgetRef ref) async {
-    ref.read(signUpLoadingProvider.notifier).update((state) => true,);
+    ref.read(signUpLoadingProvider.notifier).update(
+          (state) => true,
+        );
     try {
-      if(category == Constants.doctorCategory ){
-        await ref.read(authControllerProvider.notifier)
-            .registerWithGoogle( license: _licenseController.text, experience: int.tryParse(_expertiseController.text),
-            expertise: _expertiseController.text, licenseExpiration: _selectedDate);
+      if (category == Constants.doctorCategory) {
+        await ref.read(authControllerProvider.notifier).registerWithGoogle(
+            license: _licenseController.text,
+            experience: int.tryParse(_expertiseController.text),
+            expertise: _expertiseController.text,
+            licenseExpiration: _selectedDate);
         await navigateToHome();
-      }else{
+      } else {
         await ref.read(authControllerProvider.notifier).registerWithGoogle();
         await navigateToHome();
       }
-
     } catch (e) {
       showModalBottomSheet(
         context: context,
-        builder: (context) =>  SingleChildScrollView(
+        builder: (context) => SingleChildScrollView(
           child: ErrorModal(
             message: e.toString(),
           ),
         ),
       );
     }
-    ref.read(signUpLoadingProvider.notifier).update((state) => false,);
+    ref.read(signUpLoadingProvider.notifier).update(
+          (state) => false,
+        );
   }
+
   void navigateToLoginPage(BuildContext context) {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const LoginScreen()));
@@ -198,10 +198,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     _expertiseController.dispose();
     super.dispose();
   }
+
   void getCategory() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-       category = prefs.getString(Constants.appTypeKey)!;
+      category = prefs.getString(Constants.appTypeKey)!;
     });
   }
 
@@ -241,25 +242,25 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   ),
                 ).alignLeft(),
                 /**
-                (size.height * 47 / 852).pv,
-                GestureDetector(
-                  onTap: () {
+                    (size.height * 47 / 852).pv,
+                    GestureDetector(
+                    onTap: () {
                     setState(() {
-                      useEmail = !useEmail;
+                    useEmail = !useEmail;
                     });
-                  },
-                  child: Text(
+                    },
+                    child: Text(
                     (useEmail)
-                        ? 'Sign in with phone number'
-                        : 'Sign in with email',
+                    ? 'Sign in with phone number'
+                    : 'Sign in with email',
                     style:
-                        Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
-                      fontSize: 14,
-                      color: Palette.blueText,
+                    Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
+                    fontSize: 14,
+                    color: Palette.blueText,
                     ),
-                  ),
-                ).alignRight(),
-                    **/
+                    ),
+                    ).alignRight(),
+                 **/
                 (size.height * 21 / 852).pv,
                 Row(
                   children: [
@@ -286,82 +287,88 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 //more info for doctor
                 (category == Constants.doctorCategory)
                     ? Row(
-                  children: [
-                    SizedBox(
-                      width: (size.width * 175 / 393),
-                      child: UnderlinedTextField(
-                        controller: _licenseController,
-                        hint: 'License number',
-                        cap: TextCapitalization.words,
-                        textInputType: TextInputType.text,
-                      ),
-                    ),
-                    Flexible(child: Container()),
-                    SizedBox(
-                      width: (size.width * 175 / 393),
-                      child: UnderlinedTextField(
-                        controller: _experienceController,
-                        hint: 'Year of experience',
-                        cap: TextCapitalization.words,
-                        textInputType: TextInputType.number,
-                      ),
-                    ),
-                  ],
-                )
-                    :Container(),
-                (category == Constants.doctorCategory)
-                    ? (size.height * 30 / 852).pv
-                    :Container(),
-                (category == Constants.doctorCategory)
-                    ?  Row(
-                      children: [
-                        const Flexible(child: Text("License expiration date",style: TextStyle( color: Palette.hintTextGray,),)),
-                        const Spacer(),
-                        InkWell(
-                        onTap: () async {
-                          DateTime? getDate = await showDatePicker(
-                              context: context,
-                              firstDate: DateTime.now(),
-                              lastDate: DateTime(2030, 12, 31, 24));
-                          if(getDate != null){
-                            _selectedDate = getDate;
-                            setState(() {
-                            });
-                          }
-                        },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              DateFormat.yMd().format(_selectedDate!),
-                              style: Palette.lightModeAppTheme.textTheme.bodySmall
-                                  ?.copyWith(
-                                color: Palette.highlightTextGray,
-                                height: 0.15,
-                                fontSize: 14,
-                              ),
+                        children: [
+                          SizedBox(
+                            width: (size.width * 175 / 393),
+                            child: UnderlinedTextField(
+                              controller: _licenseController,
+                              hint: 'License number',
+                              cap: TextCapitalization.words,
+                              textInputType: TextInputType.text,
                             ),
-                            (size.width * 16/393).ph,
-                            SvgPicture.asset(
-                              'assets/icons/svgs/calendar.svg',
-                              height: 24,
-                              width: 24,
+                          ),
+                          Flexible(child: Container()),
+                          SizedBox(
+                            width: (size.width * 175 / 393),
+                            child: UnderlinedTextField(
+                              controller: _experienceController,
+                              hint: 'Year of experience',
+                              cap: TextCapitalization.words,
+                              textInputType: TextInputType.number,
                             ),
-                          ],
-                        ),
-                        ),
-                      ],
-                    )
-                    :Container(),
+                          ),
+                        ],
+                      )
+                    : Container(),
                 (category == Constants.doctorCategory)
                     ? (size.height * 30 / 852).pv
-                    :Container(),
-                (category == Constants.doctorCategory)?
-                SpecialtiesDropdown(_expertiseController)
-                    :Container(),
+                    : Container(),
+                (category == Constants.doctorCategory)
+                    ? Row(
+                        children: [
+                          const Flexible(
+                              child: Text(
+                            "License expiration date",
+                            style: TextStyle(
+                              color: Palette.hintTextGray,
+                            ),
+                          )),
+                          const Spacer(),
+                          InkWell(
+                            onTap: () async {
+                              DateTime? getDate = await showDatePicker(
+                                  context: context,
+                                  firstDate: DateTime.now(),
+                                  lastDate: DateTime(2030, 12, 31, 24));
+                              if (getDate != null) {
+                                _selectedDate = getDate;
+                                setState(() {});
+                              }
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  DateFormat.yMd().format(_selectedDate!),
+                                  style: Palette
+                                      .lightModeAppTheme.textTheme.bodySmall
+                                      ?.copyWith(
+                                    color: Palette.highlightTextGray,
+                                    height: 0.15,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                (size.width * 16 / 393).ph,
+                                SvgPicture.asset(
+                                  'assets/icons/svgs/calendar.svg',
+                                  height: 24,
+                                  width: 24,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(),
                 (category == Constants.doctorCategory)
                     ? (size.height * 30 / 852).pv
-                    :Container(),
+                    : Container(),
+                (category == Constants.doctorCategory)
+                    ? SpecialtiesDropdown(_expertiseController)
+                    : Container(),
+                (category == Constants.doctorCategory)
+                    ? (size.height * 30 / 852).pv
+                    : Container(),
                 (useEmail)
                     ? UnderlinedTextField(
                         controller: _emailController,
@@ -399,9 +406,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 (size.height * 36 / 852).pv,
                 InkWell(
                   onTap: () async {
-
                     await createAccount(ref: ref, context: context);
-
                   },
                   child: isLoading
                       ? const SizedBox(
@@ -427,7 +432,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const PrivacyTermsScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => const PrivacyTermsScreen()),
                         );
                       },
                       child: Text(
@@ -443,25 +449,25 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 ),
                 (size.height * 40.5 / 852).pv,
                 /**
-                const OutlineButton(
+                    const OutlineButton(
                     icon: Icon(
-                      Icons.apple,
-                      color: Palette.blackColor,
-                      size: 24,
+                    Icons.apple,
+                    color: Palette.blackColor,
+                    size: 24,
                     ),
                     label: 'Continue with Apple'),
-                (size.height * 8 / 852).pv,
-                InkWell(
-                  onTap: () => signUpWithGoogle(ref),
-                  child: OutlineButton(
-                      icon: SvgPicture.asset(
-                        'assets/icons/svgs/google.svg',
-                        height: 24,
-                        width: 24,
-                      ),
-                      label: 'Continue with Google'),
-                ),
-                (size.height * 24 / 852).pv,
+                    (size.height * 8 / 852).pv,
+                    InkWell(
+                    onTap: () => signUpWithGoogle(ref),
+                    child: OutlineButton(
+                    icon: SvgPicture.asset(
+                    'assets/icons/svgs/google.svg',
+                    height: 24,
+                    width: 24,
+                    ),
+                    label: 'Continue with Google'),
+                    ),
+                    (size.height * 24 / 852).pv,
                  **/
                 InkWell(
                   onTap: () => navigateToLoginPage(context),

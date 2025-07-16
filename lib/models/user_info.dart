@@ -1,6 +1,6 @@
 import 'package:medifirst/core/constants/constants.dart';
 
-class UserInfoModel{
+class UserInfoModel {
   final String name;
   final String surname;
   final String uid;
@@ -23,7 +23,7 @@ class UserInfoModel{
   final double weight;
   final String surgicalHist;
   final String genotype;
-  final String  bloodGroup;
+  final String bloodGroup;
   final String geneticDisorder;
   final String medicalDisorder;
   final List<String> favDoctors;
@@ -60,7 +60,6 @@ class UserInfoModel{
     required this.favDoctors,
   });
 
-
   UserInfoModel copyWith({
     String? name,
     String? surname,
@@ -91,34 +90,33 @@ class UserInfoModel{
     List<String>? favPractices,
   }) {
     return UserInfoModel(
-      name: name ?? this.name,
-      surname: surname ?? this.surname,
-      uid: uid ?? this.uid,
-      latitude: latitude ?? this.latitude,
-      longitude: longitude ?? this.longitude,
-      age: age ?? this.age,
-      phone: phone ?? this.phone,
-      email: email ?? this.email,
-      address: address ?? this.address,
-      profilePicture: profilePicture ?? this.profilePicture,
-      bio: bio ?? this.bio,
-      state: state ?? this.state,
-      occupation: occupation ?? this.occupation,
-      city: city ?? this.city,
-      fcmToken: fcmToken ?? this.fcmToken,
-      emergencyContact: emergencyContact ?? this.emergencyContact,
-      bloodPressure: bloodPressure ?? this.bloodPressure,
-      bmi: bmi ?? this.bmi,
-      height: height ?? this.height,
-      weight: weight ?? this.weight,
-      surgicalHist: surgicalHist ?? this.surgicalHist,
-      genotype: genotype ?? this.genotype,
-      bloodGroup: bloodGroup ?? this.bloodGroup,
-      geneticDisorder: geneticDisorder ?? this.geneticDisorder,
-      medicalDisorder: medicalDisorder ?? this.medicalDisorder,
-      favDoctors: favDoctors ?? this.favDoctors,
-      favPractices: favPractices ?? this.favPractices
-    );
+        name: name ?? this.name,
+        surname: surname ?? this.surname,
+        uid: uid ?? this.uid,
+        latitude: latitude ?? this.latitude,
+        longitude: longitude ?? this.longitude,
+        age: age ?? this.age,
+        phone: phone ?? this.phone,
+        email: email ?? this.email,
+        address: address ?? this.address,
+        profilePicture: profilePicture ?? this.profilePicture,
+        bio: bio ?? this.bio,
+        state: state ?? this.state,
+        occupation: occupation ?? this.occupation,
+        city: city ?? this.city,
+        fcmToken: fcmToken ?? this.fcmToken,
+        emergencyContact: emergencyContact ?? this.emergencyContact,
+        bloodPressure: bloodPressure ?? this.bloodPressure,
+        bmi: bmi ?? this.bmi,
+        height: height ?? this.height,
+        weight: weight ?? this.weight,
+        surgicalHist: surgicalHist ?? this.surgicalHist,
+        genotype: genotype ?? this.genotype,
+        bloodGroup: bloodGroup ?? this.bloodGroup,
+        geneticDisorder: geneticDisorder ?? this.geneticDisorder,
+        medicalDisorder: medicalDisorder ?? this.medicalDisorder,
+        favDoctors: favDoctors ?? this.favDoctors,
+        favPractices: favPractices ?? this.favPractices);
   }
 
   Map<String, dynamic> toMap() {
@@ -164,7 +162,8 @@ class UserInfoModel{
       phone: map['phone'] as String? ?? '',
       email: map['email'] as String? ?? '',
       address: map['address'] as String? ?? '',
-      profilePicture: map['profilePicture'] as String? ?? Constants.defaultProfilePic,
+      profilePicture:
+          map['profilePicture'] as String? ?? Constants.defaultProfilePic,
       bio: map['bio'] as String? ?? '',
       state: map['state'] as String? ?? '',
       occupation: map['occupation'] as String? ?? '',
@@ -180,11 +179,14 @@ class UserInfoModel{
       bloodGroup: map['bloodGroup'] as String? ?? '',
       geneticDisorder: map['geneticDisorder'] as String? ?? '',
       medicalDisorder: map['medicalDisorder'] as String? ?? '',
-      favDoctors: (map['favDoctors'] as List<dynamic>?)?.map((e) => e as String).toList() ?? [],
-      favPractices: (map['favPractices'] as List<dynamic>?)?.map((e) => e as String).toList() ?? [],
+      favDoctors: (map['favDoctors'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
+      favPractices: (map['favPractices'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
     );
   }
-
-
-//</editor-fold>
 }

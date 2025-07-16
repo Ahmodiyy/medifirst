@@ -5,7 +5,6 @@ import 'package:medifirst/core/constants/constants.dart';
 import 'package:medifirst/core/constants/data.dart';
 import 'package:medifirst/core/utils/utils.dart';
 import 'package:medifirst/features/auth/controller/auth_controller.dart';
-import 'package:medifirst/models/user_info.dart';
 
 import '../../../../core/theming/palette.dart';
 
@@ -25,25 +24,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
   }
 
-
-  void _setupMessagingWhenUserAvailable() async {
-    ref.listen<UserInfoModel?>(userProvider, (previous, next) {
-      if (next != null) {
-        setupFirebaseMessaging(Constants.patientCategory, next.uid);
-      }
-    });
-  }
-
   @override
   void initState() {
     super.initState();
+    setupFirebaseMessaging(
+        Constants.patientCategory, ref.read(userProvider)!.uid);
   }
 
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.sizeOf(context).height;
     final double width = MediaQuery.sizeOf(context).width;
-    _setupMessagingWhenUserAvailable();
     return DefaultTabController(
       length: 5,
       child: Scaffold(
@@ -59,11 +50,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             indicatorColor: Palette.whiteColor,
             unselectedLabelColor: Palette.dividerGray,
             isScrollable: false,
-            labelStyle: Palette.lightModeAppTheme.textTheme.bodyMedium?.copyWith(
+            labelStyle:
+                Palette.lightModeAppTheme.textTheme.bodyMedium?.copyWith(
               fontSize: 8,
               color: Palette.whiteColor,
             ),
-            unselectedLabelStyle: Palette.lightModeAppTheme.textTheme.bodyMedium?.copyWith(
+            unselectedLabelStyle:
+                Palette.lightModeAppTheme.textTheme.bodyMedium?.copyWith(
               fontSize: 8,
               color: Palette.dividerGray,
             ),
