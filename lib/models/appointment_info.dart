@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class AppointmentInfo{
+class AppointmentInfo {
   final String aID;
   final String doctorName;
   final String patientName;
@@ -16,6 +16,8 @@ class AppointmentInfo{
   final Timestamp endTime;
   final Timestamp reminder;
   final bool isScheduled;
+  final bool appointmentHeld;
+  final bool paymentHeld;
 
 //<editor-fold desc="Data Methods">
   const AppointmentInfo({
@@ -34,8 +36,9 @@ class AppointmentInfo{
     required this.endTime,
     required this.reminder,
     required this.isScheduled,
+    required this.appointmentHeld,
+    required this.paymentHeld,
   });
-
 
   AppointmentInfo copyWith({
     String? aID,
@@ -53,6 +56,8 @@ class AppointmentInfo{
     Timestamp? endTime,
     Timestamp? reminder,
     bool? isScheduled,
+    bool? appointmentHeld,
+    bool? paymentHeld,
   }) {
     return AppointmentInfo(
       aID: aID ?? this.aID,
@@ -70,9 +75,10 @@ class AppointmentInfo{
       endTime: endTime ?? this.endTime,
       reminder: reminder ?? this.reminder,
       isScheduled: isScheduled ?? this.isScheduled,
+      appointmentHeld: appointmentHeld ?? this.appointmentHeld,
+      paymentHeld: paymentHeld ?? this.paymentHeld,
     );
   }
-
 
   Map<String, dynamic> toMap() {
     return {
@@ -91,6 +97,8 @@ class AppointmentInfo{
       'endTime': this.endTime,
       'reminder': this.reminder,
       'isScheduled': this.isScheduled,
+      'appointmentHeld': this.appointmentHeld,
+      'paymentHeld': this.paymentHeld,
     };
   }
 
@@ -111,9 +119,8 @@ class AppointmentInfo{
       endTime: map['endTime'] as Timestamp,
       reminder: map['reminder'] as Timestamp,
       isScheduled: map['isScheduled'] as bool,
+      appointmentHeld: map['appointmentHeld'] as bool,
+      paymentHeld: map['paymentHeld'] as bool,
     );
   }
-
-
-//</editor-fold>
 }
