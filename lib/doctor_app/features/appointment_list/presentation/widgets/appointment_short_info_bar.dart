@@ -76,38 +76,41 @@ class AppointmentShortInfoBar extends ConsumerWidget {
               (DateTime.now().isAfter(appointment.startTime.toDate()) &&
                       DateTime.now().isBefore(appointment.endTime.toDate()))
                   ? Text(
-                      'Now',
+                    'Now',
+                    style: Palette.lightModeAppTheme.textTheme.bodySmall
+                        ?.copyWith(
+                          letterSpacing: -0.4,
+                          color:
+                              checkTime()
+                                  ? Palette.whiteColor
+                                  : Palette.blackColor,
+                        ),
+                  )
+                  : RichText(
+                    text: TextSpan(
+                      text: DateFormat(
+                        'dd/MM/yyyy',
+                      ).format(appointment.startTime.toDate()),
                       style: Palette.lightModeAppTheme.textTheme.bodySmall
                           ?.copyWith(
-                        letterSpacing: -0.4,
-                        color: checkTime()
-                            ? Palette.whiteColor
-                            : Palette.blackColor,
-                      ),
-                    )
-                  : RichText(
-                      text: TextSpan(
-                          text: DateFormat('dd/MM/yyyy')
-                              .format(appointment.startTime.toDate()),
-                          style: Palette.lightModeAppTheme.textTheme.bodySmall
-                              ?.copyWith(
                             letterSpacing: -0.4,
                             color: Palette.smallBodyGray,
                           ),
-                          children: [
-                            const TextSpan(text: ' '),
-                            TextSpan(
-                              text: DateFormat.jm()
-                                  .format(appointment.startTime.toDate()),
-                              style: Palette
-                                  .lightModeAppTheme.textTheme.bodySmall
-                                  ?.copyWith(
+                      children: [
+                        const TextSpan(text: ' '),
+                        TextSpan(
+                          text: DateFormat.jm().format(
+                            appointment.startTime.toDate(),
+                          ),
+                          style: Palette.lightModeAppTheme.textTheme.bodySmall
+                              ?.copyWith(
                                 letterSpacing: -0.4,
                                 color: Palette.smallBodyGray,
                               ),
-                            ),
-                          ]),
+                        ),
+                      ],
                     ),
+                  ),
             ],
           ),
           Flexible(child: Container()),
@@ -115,44 +118,56 @@ class AppointmentShortInfoBar extends ConsumerWidget {
                   appointment.paymentHeld == false &&
                   DateTime.now().isAfter(appointment.endTime.toDate())
               ? InkWell(
-                  child: isLoading
-                      ? const Center(
+                child:
+                    isLoading
+                        ? const Center(
                           child: CircularProgressIndicator(
                             color: Palette.consultationDarkGreen,
                           ),
                         )
-                      : const Chip(
+                        : const Chip(
                           label: Text(
                             "Get Payment",
-                            style:
-                                TextStyle(color: Palette.consultationDarkGreen),
+                            style: TextStyle(
+                              color: Palette.consultationDarkGreen,
+                            ),
                           ),
                           color: WidgetStatePropertyAll(Palette.whiteColor),
                         ),
-                  onTap: () async {
-                    ref.read(loadingProvider.notifier).update(
-                          (state) => true,
-                        );
-                    final book = ref.read(bookDoctorsControllerProvider);
-                    await book.removeFeeFromBalance(
-                        appointment.patientId, appointment.price);
-                    await book.removeFeeFromBalance(
-                        appointment.doctorId, -1 * appointment.price);
-                    await ref.read(doctorChatRepoProvider).updatePaymentHeld(
-                        appt: appointment, paymentHeld: true);
-                    await book.logTransaction(appointment.patientId,
-                        appointment.price.toDouble(), appointment.doctorId);
-                    ref.read(loadingProvider.notifier).update(
-                          (state) => false,
-                        );
-                    showSuccessSnackbar(context, 'successful');
-                  },
-                )
-              : SvgPicture.asset(
-                  _getIcon(),
-                  width: 24,
-                  height: 24,
-                )
+                onTap:
+                    isLoading
+                        ? null
+                        : () async {
+                          ref
+                              .read(loadingProvider.notifier)
+                              .update((state) => true);
+                          final book = ref.read(bookDoctorsControllerProvider);
+                          await book.removeFeeFromBalance(
+                            appointment.patientId,
+                            appointment.price,
+                          );
+                          await book.removeFeeFromBalance(
+                            appointment.doctorId,
+                            -1 * appointment.price,
+                          );
+                          await ref
+                              .read(doctorChatRepoProvider)
+                              .updatePaymentHeld(
+                                appt: appointment,
+                                paymentHeld: true,
+                              );
+                          await book.logTransaction(
+                            appointment.patientId,
+                            appointment.price.toDouble(),
+                            appointment.doctorId,
+                          );
+                          ref
+                              .read(loadingProvider.notifier)
+                              .update((state) => false);
+                          showSuccessSnackbar(context, 'successful');
+                        },
+              )
+              : SvgPicture.asset(_getIcon(), width: 24, height: 24),
         ],
       ).sidePad(16).topPad(20),
     );

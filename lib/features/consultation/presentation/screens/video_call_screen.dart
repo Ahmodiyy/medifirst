@@ -15,14 +15,11 @@ class VideoCallScreen extends ConsumerWidget {
     return Scaffold(
       body: Center(
         child: ZegoUIKitPrebuiltCall(
-          // appID: int.parse(
-          //     const String.fromEnvironment('zegoCloudAppId', defaultValue: '1')),
-          // appSign:
-          //     const String.fromEnvironment('zegoCloudAppSign', defaultValue: ''),
-          appID: 1633062655,
-          // Fill in the appID that you get from ZEGOCLOUD Admin Console.
+          appID: int.parse(
+              const String.fromEnvironment(
+                  'zegoCloudAppId', defaultValue: '1')),
           appSign:
-              'ef466d1fc4dced798e77349307ac7071966e6dde8ec60ad2fcade947786001a4',
+          const String.fromEnvironment('zegoCloudAppSign', defaultValue: ''),
           userID: appt.patientId,
           userName: appt.patientName,
           callID: appt.aID,

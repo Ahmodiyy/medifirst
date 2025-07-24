@@ -34,16 +34,16 @@ class DoctorExploreScreen extends ConsumerStatefulWidget {
 class _DoctorExploreScreenState extends ConsumerState<DoctorExploreScreen> {
   Future<void> initZegoCall() async {
     await ZegoUIKitPrebuiltCallInvitationService().init(
-      // appID: int.parse(
-      //     const String.fromEnvironment('zegoCloudAppId', defaultValue: '1')),
-      // appSign:
-      //     const String.fromEnvironment('zegoCloudAppSign', defaultValue: ''),
-      appID: 1633062655,
-      // Fill in the appID that you get from ZEGOCLOUD Admin Console.
+      appID: int.parse(
+          const String.fromEnvironment('zegoCloudAppId', defaultValue: '1')),
       appSign:
-          'ef466d1fc4dced798e77349307ac7071966e6dde8ec60ad2fcade947786001a4',
-      userID: ref.read(doctorProvider)?.doctorId ?? 'Guest',
-      userName: ref.read(doctorProvider)?.name ?? 'Guest',
+      const String.fromEnvironment('zegoCloudAppSign', defaultValue: ''),
+      userID: ref
+          .read(doctorProvider)
+          ?.doctorId ?? 'Guest',
+      userName: ref
+          .read(doctorProvider)
+          ?.name ?? 'Guest',
       plugins: [ZegoUIKitSignalingPlugin()],
     );
   }
@@ -56,7 +56,9 @@ class _DoctorExploreScreenState extends ConsumerState<DoctorExploreScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery
+        .of(context)
+        .size;
     final doctor = ref.watch(doctorProvider);
     if (doctor == null) {
       return const Scaffold(
@@ -75,14 +77,14 @@ class _DoctorExploreScreenState extends ConsumerState<DoctorExploreScreen> {
                   SizedBox(height: size.height * 23 / 852),
                   Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
+                    EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
                     child: DoctorExploreAppBar(
                         name: doctor.name, profilePic: doctor.doctorImage),
                   ),
                   SizedBox(height: size.height * 24 / 852),
                   Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
+                    EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
                     child: const ExpandableSectionHeading(
                       heading: 'APPOINTMENTS',
                       screen: AppointmentListScreen(),
@@ -100,7 +102,7 @@ class _DoctorExploreScreenState extends ConsumerState<DoctorExploreScreen> {
                   SizedBox(height: size.height * 24 / 852),
                   Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
+                    EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
                     child: const ExpandableSectionHeading(
                       heading: 'REQUESTS',
                       screen: AppointmentListScreen(),
@@ -118,9 +120,9 @@ class _DoctorExploreScreenState extends ConsumerState<DoctorExploreScreen> {
                   SizedBox(height: size.height * 24 / 852),
                   Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
+                    EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
                     child:
-                        const SectionHeadingText(heading: "TOP RATED DOCTORS"),
+                    const SectionHeadingText(heading: "TOP RATED DOCTORS"),
                   ),
                   SizedBox(height: size.height * 12 / 852),
                 ],
@@ -138,96 +140,97 @@ class _DoctorExploreScreenState extends ConsumerState<DoctorExploreScreen> {
       child: SizedBox(
         height: size.height * 111 / 852,
         child: ref.watch(getDoctorAppointmentProvider(doctorId)).when(
-              data: (appointments) {
-                if (appointments.isNotEmpty) {
-                  final request = appointments[appointments.length - 1];
-                  return InkWell(
-                    onTap: () => Navigator.push(
+          data: (appointments) {
+            if (appointments.isNotEmpty) {
+              final request = appointments[appointments.length - 1];
+              return InkWell(
+                onTap: () =>
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const AppointmentListScreen()),
                     ),
-                    child: Container(
-                      color: Palette.whiteColor,
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Center(
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 20),
-                                child: Card53Image(
-                                  imgUrl: request.patientImageURL,
-                                  height: 50,
-                                  width: 50,
+                child: Container(
+                  color: Palette.whiteColor,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Card53Image(
+                              imgUrl: request.patientImageURL,
+                              height: 50,
+                              width: 50,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Text(
+                                request.patientName,
+                                style: Palette
+                                    .lightModeAppTheme.textTheme.titleSmall
+                                    ?.copyWith(
+                                  letterSpacing: -0.4,
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Text(
-                                    request.patientName,
-                                    style: Palette
-                                        .lightModeAppTheme.textTheme.titleSmall
+                              (size.height * 8 / 852).pv,
+                              RichText(
+                                text: TextSpan(
+                                    text: DateFormat('dd/MM/yyyy')
+                                        .format(request.startTime.toDate()),
+                                    style: Palette.lightModeAppTheme
+                                        .textTheme.bodySmall
                                         ?.copyWith(
                                       letterSpacing: -0.4,
+                                      color: Palette.smallBodyGray,
                                     ),
-                                  ),
-                                  (size.height * 8 / 852).pv,
-                                  RichText(
-                                    text: TextSpan(
-                                        text: DateFormat('dd/MM/yyyy')
-                                            .format(request.startTime.toDate()),
+                                    children: [
+                                      TextSpan(
+                                        text: '   ',
                                         style: Palette.lightModeAppTheme
                                             .textTheme.bodySmall
                                             ?.copyWith(
                                           letterSpacing: -0.4,
                                           color: Palette.smallBodyGray,
                                         ),
-                                        children: [
-                                          TextSpan(
-                                            text: '   ',
-                                            style: Palette.lightModeAppTheme
-                                                .textTheme.bodySmall
-                                                ?.copyWith(
-                                              letterSpacing: -0.4,
-                                              color: Palette.smallBodyGray,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: DateFormat.jm().format(
-                                                request.startTime.toDate()),
-                                            style: Palette.lightModeAppTheme
-                                                .textTheme.bodySmall
-                                                ?.copyWith(
-                                              letterSpacing: -0.4,
-                                              color: Palette.smallBodyGray,
-                                            ),
-                                          )
-                                        ]),
-                                  ),
-                                ],
+                                      ),
+                                      TextSpan(
+                                        text: DateFormat.jm().format(
+                                            request.startTime.toDate()),
+                                        style: Palette.lightModeAppTheme
+                                            .textTheme.bodySmall
+                                            ?.copyWith(
+                                          letterSpacing: -0.4,
+                                          color: Palette.smallBodyGray,
+                                        ),
+                                      )
+                                    ]),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  );
-                } else {
-                  return const ErrorText(error: 'No appointment');
-                }
-              },
-              error: (error, stackTrace) =>
-                  const ErrorText(error: 'No appointments upcoming'),
-              loading: () => const Loader(),
-            ),
+                  ),
+                ),
+              );
+            } else {
+              return const ErrorText(error: 'No appointment');
+            }
+          },
+          error: (error, stackTrace) =>
+          const ErrorText(error: 'No appointments upcoming'),
+          loading: () => const Loader(),
+        ),
       ),
     );
   }
@@ -279,17 +282,17 @@ class _DoctorExploreScreenState extends ConsumerState<DoctorExploreScreen> {
       child: SizedBox(
         height: size.height * 111 / 852,
         child: ref.watch(getDoctorAppointmentRequestsProvider(doctorId)).when(
-              data: (requests) {
-                if (requests.isNotEmpty) {
-                  return AppointmentRequestBar(request: requests[0]);
-                } else {
-                  return const ErrorText(error: 'No appointment requests');
-                }
-              },
-              error: (err, stack) =>
-                  const ErrorText(error: 'No appointment requests'),
-              loading: () => const Loader(),
-            ),
+          data: (requests) {
+            if (requests.isNotEmpty) {
+              return AppointmentRequestBar(request: requests[0]);
+            } else {
+              return const ErrorText(error: 'No appointment requests');
+            }
+          },
+          error: (err, stack) =>
+          const ErrorText(error: 'No appointment requests'),
+          loading: () => const Loader(),
+        ),
       ),
     );
   }
@@ -299,18 +302,18 @@ class _DoctorExploreScreenState extends ConsumerState<DoctorExploreScreen> {
       child: SizedBox(
         height: size.height * (852 * 0.5) / 852,
         child: ref.watch(topRatedDoctorsProvider).when(
-              data: (doctors) {
-                return ListView.builder(
-                  itemCount: doctors.length.clamp(0, 4),
-                  itemBuilder: (context, index) {
-                    return TopRatedDoctorBar(doctor: doctors[index]);
-                  },
-                );
+          data: (doctors) {
+            return ListView.builder(
+              itemCount: doctors.length.clamp(0, 4),
+              itemBuilder: (context, index) {
+                return TopRatedDoctorBar(doctor: doctors[index]);
               },
-              error: (error, stackTrace) =>
-                  const ErrorText(error: 'An error occurred'),
-              loading: () => const Loader(),
-            ),
+            );
+          },
+          error: (error, stackTrace) =>
+          const ErrorText(error: 'An error occurred'),
+          loading: () => const Loader(),
+        ),
       ),
     );
   }
