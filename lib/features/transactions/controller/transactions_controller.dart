@@ -17,6 +17,10 @@ final getTransactionsProvider =
     StreamProvider.family.autoDispose((ref, String uid) {
   return ref.read(transactionsControllerProvider).getTransactions(uid);
 });
+final getDoctorTransactionsProvider =
+    StreamProvider.family.autoDispose((ref, String uid) {
+  return ref.read(transactionsControllerProvider).getDoctorTransactions(uid);
+});
 
 class TransactionsController {
   final TransactionsRepository _repo;
@@ -80,5 +84,9 @@ class TransactionsController {
 
   Stream<List<TransactionModel>> getTransactions(String uid) {
     return _repo.getTransactions(uid);
+  }
+
+  Stream<List<TransactionModel>> getDoctorTransactions(String uid) {
+    return _repo.getDoctorTransactions(uid);
   }
 }

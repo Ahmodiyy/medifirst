@@ -53,7 +53,7 @@ class DoctorTransactionHistoryScreen extends ConsumerWidget {
                         'All Categories',
                         style: Palette.lightModeAppTheme.textTheme.bodySmall
                             ?.copyWith(
-                            fontSize: 17, color: Palette.hintTextGray),
+                                fontSize: 17, color: Palette.hintTextGray),
                       ),
                       (size.width * 7 / 393).ph,
                       Icon(
@@ -70,7 +70,7 @@ class DoctorTransactionHistoryScreen extends ConsumerWidget {
                         'All',
                         style: Palette.lightModeAppTheme.textTheme.bodySmall
                             ?.copyWith(
-                            fontSize: 17, color: Palette.hintTextGray),
+                                fontSize: 17, color: Palette.hintTextGray),
                       ),
                       (size.width * 7 / 393).ph,
                       Icon(
@@ -85,29 +85,31 @@ class DoctorTransactionHistoryScreen extends ConsumerWidget {
               (size.height * 20 / 852).pv,
               SizedBox(
                 height: size.height * 641 / 852,
-                child: ref.watch(getTransactionsProvider(doctor!.doctorId)).when(
-                  data: (transactions) {
-                    return ListView.builder(
-                      itemCount: transactions.length,
-                      itemBuilder: (context, index) {
-                        final transaction = transactions[index];
-                        return Column(
-                          children: [
-                            TransactionListTile(transaction: transaction),
-                            Divider(
-                              color: Palette.dividerGray,
-                              indent: size.width * 57 / 393,
-                              endIndent: size.width * 57 / 393,
-                            ),
-                          ],
+                child: ref
+                    .watch(getDoctorTransactionsProvider(doctor!.doctorId))
+                    .when(
+                      data: (transactions) {
+                        return ListView.builder(
+                          itemCount: transactions.length,
+                          itemBuilder: (context, index) {
+                            final transaction = transactions[index];
+                            return Column(
+                              children: [
+                                TransactionListTile(transaction: transaction),
+                                Divider(
+                                  color: Palette.dividerGray,
+                                  indent: size.width * 57 / 393,
+                                  endIndent: size.width * 57 / 393,
+                                ),
+                              ],
+                            );
+                          },
                         );
                       },
-                    );
-                  },
-                  error: (err, st) =>
-                      ErrorText(error: 'No transactions available'),
-                  loading: () => Loader(),
-                ),
+                      error: (err, st) =>
+                          ErrorText(error: 'No transactions available'),
+                      loading: () => Loader(),
+                    ),
               )
             ],
           ),

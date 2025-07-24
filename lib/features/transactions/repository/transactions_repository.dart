@@ -105,4 +105,25 @@ class TransactionsRepository {
       rethrow;
     }
   }
+
+  Stream<List<TransactionModel>> getDoctorTransactions(String uid) async* {
+    try {
+      List<TransactionModel> appointments = [];
+      final snapshots = _transactions
+          .where('recipientId', isEqualTo: uid)
+          .orderBy('date', descending: true)
+          .snapshots();
+
+      await for (var snapshot in snapshots) {
+        appointments = snapshot.docs.map((e) {
+          return TransactionModel.fromMap(e.data() as Map<String, dynamic>);
+        }).toList();
+
+        yield appointments;
+      }
+    } catch (e) {
+      print('Error in repo getTransactions : $e');
+      rethrow;
+    }
+  }
 }
