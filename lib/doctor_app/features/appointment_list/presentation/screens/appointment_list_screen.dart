@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medifirst/core/theming/spaces.dart';
 import 'package:medifirst/core/widgets/molecules/appoint_request_bar.dart';
@@ -12,8 +11,7 @@ import 'package:medifirst/features/auth/controller/auth_controller.dart';
 
 import '../../../../../core/theming/palette.dart';
 import '../../../../../core/widgets/elements/error_text.dart';
-import '../../../../../core/widgets/elements/loader.dart';import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
+import '../../../../../core/widgets/elements/loader.dart';
 
 class AppointmentListScreen extends ConsumerStatefulWidget {
   const AppointmentListScreen({super.key});
@@ -23,7 +21,6 @@ class AppointmentListScreen extends ConsumerStatefulWidget {
 }
 
 class _AppointmentListScreenState extends ConsumerState<AppointmentListScreen> {
-
   ValueNotifier<int> panel = ValueNotifier(0);
   @override
   Widget build(BuildContext context) {
@@ -108,20 +105,20 @@ class _AppointmentListScreenState extends ConsumerState<AppointmentListScreen> {
                                       : Palette.highlightTextGray),
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          panel.value = 3;
-                        },
-                        child: Text(
-                          'Chat',
-                          style: Palette.lightModeAppTheme.textTheme.titleSmall
-                              ?.copyWith(
-                                  fontSize: 16,
-                                  color: (panel.value == 3)
-                                      ? Palette.blackColor
-                                      : Palette.highlightTextGray),
-                        ),
-                      ),
+                      // InkWell(
+                      //   onTap: () {
+                      //     panel.value = 3;
+                      //   },
+                      //   child: Text(
+                      //     'Chat',
+                      //     style: Palette.lightModeAppTheme.textTheme.titleSmall
+                      //         ?.copyWith(
+                      //             fontSize: 16,
+                      //             color: (panel.value == 3)
+                      //                 ? Palette.blackColor
+                      //                 : Palette.highlightTextGray),
+                      //   ),
+                      // ),
                       (size.width * 27 / 393).ph,
                     ],
                   ).sidePad(size.width * 4 / 393);
@@ -145,7 +142,7 @@ class _AppointmentListScreenState extends ConsumerState<AppointmentListScreen> {
                                     itemBuilder: (context, index) {
                                       final appt = requests[index];
                                       return AppointmentRequestBar(
-                                          request: appt,
+                                        request: appt,
                                       );
                                     },
                                   );
@@ -166,7 +163,9 @@ class _AppointmentListScreenState extends ConsumerState<AppointmentListScreen> {
                                       return InkWell(
                                           onTap: () {
                                             bool isNowWithinRange =
-                                            isCurrentTimeWithinRange(appt.startTime.toDate(), appt.endTime.toDate());
+                                                isCurrentTimeWithinRange(
+                                                    appt.startTime.toDate(),
+                                                    appt.endTime.toDate());
                                             if (isNowWithinRange) {
                                               Navigator.push(
                                                   context,
@@ -174,8 +173,6 @@ class _AppointmentListScreenState extends ConsumerState<AppointmentListScreen> {
                                                       builder: (context) =>
                                                           DoctorVideoCallScreen(
                                                               appt: appt)));
-
-
                                             }
                                           },
                                           child: AppointmentShortInfoBar(
@@ -199,7 +196,9 @@ class _AppointmentListScreenState extends ConsumerState<AppointmentListScreen> {
                                       return InkWell(
                                           onTap: () {
                                             bool isNowWithinRange =
-                                            isCurrentTimeWithinRange(appt.startTime.toDate(), appt.endTime.toDate());
+                                                isCurrentTimeWithinRange(
+                                                    appt.startTime.toDate(),
+                                                    appt.endTime.toDate());
                                             if (isNowWithinRange) {
                                               Navigator.push(
                                                   context,
@@ -207,7 +206,6 @@ class _AppointmentListScreenState extends ConsumerState<AppointmentListScreen> {
                                                       builder: (context) =>
                                                           DoctorVoiceCallScreen(
                                                               appt: appt)));
-
                                             }
                                           },
                                           child: AppointmentShortInfoBar(
@@ -231,13 +229,16 @@ class _AppointmentListScreenState extends ConsumerState<AppointmentListScreen> {
                                       return InkWell(
                                           onTap: () {
                                             bool isNowWithinRange =
-                                            isCurrentTimeWithinRange(appt.startTime.toDate(), appt.endTime.toDate());
+                                                isCurrentTimeWithinRange(
+                                                    appt.startTime.toDate(),
+                                                    appt.endTime.toDate());
                                             if (isNowWithinRange) {
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          DoctorChatPage(appt: appt)));
+                                                          DoctorChatPage(
+                                                              appt: appt)));
                                             }
                                           },
                                           child: AppointmentShortInfoBar(
@@ -258,19 +259,20 @@ class _AppointmentListScreenState extends ConsumerState<AppointmentListScreen> {
       ),
     );
   }
+
   bool isCurrentTimeWithinRange(DateTime startTime, DateTime endTime) {
     DateTime now = DateTime.now();
     // Debug prints to check values and conditions
     debugPrint('now: ${now.toString()}');
     debugPrint('startTime: ${startTime.toString()}');
     debugPrint('endTime: ${endTime.toString()}');
-    debugPrint('first condition: ${(now.isAfter(startTime) || now.isAtSameMomentAs(startTime))}');
-    debugPrint('second condition: ${(now.isBefore(endTime) || now.isAtSameMomentAs(endTime))}');
+    debugPrint(
+        'first condition: ${(now.isAfter(startTime) || now.isAtSameMomentAs(startTime))}');
+    debugPrint(
+        'second condition: ${(now.isBefore(endTime) || now.isAtSameMomentAs(endTime))}');
 
     // Check if 'now' is within the range of startTime and endTime
     return (now.isAfter(startTime) || now.isAtSameMomentAs(startTime)) &&
         (now.isBefore(endTime) || now.isAtSameMomentAs(endTime));
   }
-
-
 }

@@ -1,20 +1,19 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:medifirst/models/appointment_info.dart';
 import 'package:medifirst/core/theming/palette.dart';
+import 'package:medifirst/models/appointment_info.dart';
 
 import '../../../../../features/auth/controller/auth_controller.dart';
 import '../../../../../models/doctor_info.dart';
 import 'doctor_video_call_screen.dart';
 import 'doctor_voice_call_screen.dart';
-
 
 class DoctorChatPage extends ConsumerStatefulWidget {
   final AppointmentInfo appt;
@@ -80,21 +79,21 @@ class _DoctorChatPageState extends ConsumerState<DoctorChatPage> {
       child: Row(
         children: [
           IconButton(
-            icon: Icon(Icons.arrow_back_ios, size: 20),
+            icon: const Icon(Icons.arrow_back_ios, size: 20),
             onPressed: () => Navigator.pop(context),
           ),
           CircleAvatar(
             radius: 20,
             backgroundImage: NetworkImage(widget.appt.patientImageURL),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   widget.appt.patientName,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 16,
                   ),
@@ -102,7 +101,6 @@ class _DoctorChatPageState extends ConsumerState<DoctorChatPage> {
               ],
             ),
           ),
-
           IconButton(
             icon: Icon(Icons.phone_outlined, color: Palette.mainGreen),
             onPressed: () {
@@ -110,8 +108,7 @@ class _DoctorChatPageState extends ConsumerState<DoctorChatPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          DoctorVoiceCallScreen(
-                              appt: widget.appt)));
+                          DoctorVoiceCallScreen(appt: widget.appt)));
             },
           ),
           IconButton(
@@ -121,11 +118,9 @@ class _DoctorChatPageState extends ConsumerState<DoctorChatPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          DoctorVideoCallScreen(
-                              appt: widget.appt)));
+                          DoctorVideoCallScreen(appt: widget.appt)));
             },
           ),
-
         ],
       ),
     );
@@ -133,7 +128,8 @@ class _DoctorChatPageState extends ConsumerState<DoctorChatPage> {
 
   Widget _buildChatMessages() {
     return StreamBuilder<QuerySnapshot>(
-      stream:  _firestore.collection('messages')
+      stream: _firestore
+          .collection('messages')
           .doc(widget.appt.aID)
           .collection('chat_messages')
           .orderBy('createdAt', descending: true)
@@ -169,15 +165,14 @@ class _DoctorChatPageState extends ConsumerState<DoctorChatPage> {
     print('status of this document is : ${doc['status']}');
     bool isMe = data['userId'] == _user?.doctorId;
     Timestamp? timestamp = data['createdAt'] as Timestamp?;
-    String time = timestamp != null
-        ? DateFormat('HH:mm').format(timestamp.toDate())
-        : '';
+    String time =
+        timestamp != null ? DateFormat('HH:mm').format(timestamp.toDate()) : '';
 
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Column(
-
-        crossAxisAlignment:  isMe ? CrossAxisAlignment.end: CrossAxisAlignment.start,
+        crossAxisAlignment:
+            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Container(
             margin: EdgeInsets.only(
@@ -193,7 +188,8 @@ class _DoctorChatPageState extends ConsumerState<DoctorChatPage> {
             ),
             child: Column(
               mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: [
                 if (data['text'] != null)
                   Text(
@@ -223,55 +219,59 @@ class _DoctorChatPageState extends ConsumerState<DoctorChatPage> {
                       ),
                     ),
                   ),
-                if (data['imageUrl'] != null && data['status']=='uploaded')
+                if (data['imageUrl'] != null && data['status'] == 'uploaded')
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      data['imageUrl'],
-                      height: 200,
-                      width: 200,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Container(
-                            color: Palette.whiteColor,
-                            width: 200,
-                            height: 200,
-                            child: Center(
-                              child: SizedBox(
-                                height: 50,
-                                width: 50,
-                                child: CircularProgressIndicator(
-                                  color: Palette.mainGreen,
-                                  strokeWidth: 5,
-                                  value: loadingProgress.expectedTotalBytes != null
-                                      ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                                      : null,
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        data['imageUrl'],
+                        height: 200,
+                        width: 200,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
+                              color: Palette.whiteColor,
+                              width: 200,
+                              height: 200,
+                              child: Center(
+                                child: SizedBox(
+                                  height: 50,
+                                  width: 50,
+                                  child: CircularProgressIndicator(
+                                    color: Palette.mainGreen,
+                                    strokeWidth: 5,
+                                    value: loadingProgress.expectedTotalBytes !=
+                                            null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
+                                            (loadingProgress
+                                                    .expectedTotalBytes ??
+                                                1)
+                                        : null,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Container(
-                            height: 200,
-                            width: 200,
-                            color: Palette.whiteColor,
-                            child: Icon(
-                              Icons.error_outline,
-                              color: Colors.red,
-                              size: 50,
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
+                              height: 200,
+                              width: 200,
+                              color: Palette.whiteColor,
+                              child: Icon(
+                                Icons.error_outline,
+                                color: Colors.red,
+                                size: 50,
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    )
-                  ),
+                          );
+                        },
+                      )),
               ],
             ),
           ),
@@ -389,9 +389,11 @@ class _DoctorChatPageState extends ConsumerState<DoctorChatPage> {
 
   Future<void> _uploadFile(File file, String folder) async {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    Reference storageRef = FirebaseStorage.instance.ref().child('chat-$folder/$fileName');
+    Reference storageRef =
+        FirebaseStorage.instance.ref().child('chat-$folder/$fileName');
     String tempImageUrl = "uploading";
-   DocumentReference messageDocument = await _sendMessage(imageUrl: tempImageUrl, status: tempImageUrl);
+    DocumentReference messageDocument =
+        await _sendMessage(imageUrl: tempImageUrl, status: tempImageUrl);
     UploadTask uploadTask = storageRef.putFile(file);
     try {
       TaskSnapshot snapshot = await uploadTask;
@@ -406,7 +408,12 @@ class _DoctorChatPageState extends ConsumerState<DoctorChatPage> {
 
 // Function to update the message with the final image URL
   void _updateMessageWithImageUrl(String messageId, String imageUrl) {
-    _firestore.collection('messages').doc(widget.appt.aID).collection('chat_messages').doc(messageId).update({
+    _firestore
+        .collection('messages')
+        .doc(widget.appt.aID)
+        .collection('chat_messages')
+        .doc(messageId)
+        .update({
       'imageUrl': imageUrl,
       'status': 'uploaded', // Update status
     });
@@ -414,10 +421,16 @@ class _DoctorChatPageState extends ConsumerState<DoctorChatPage> {
 
 // Function to mark the message as "failed" in case of upload errors
   void _updateMessageWithError(String messageId) {
-    _firestore.collection('messages').doc(widget.appt.aID).collection('chat_messages').doc(messageId).update({
+    _firestore
+        .collection('messages')
+        .doc(widget.appt.aID)
+        .collection('chat_messages')
+        .doc(messageId)
+        .update({
       'status': 'failed',
     });
   }
+
   void _sendTextMessage() {
     if (_messageController.text.isNotEmpty) {
       _sendMessage(text: _messageController.text);
@@ -425,8 +438,16 @@ class _DoctorChatPageState extends ConsumerState<DoctorChatPage> {
     }
   }
 
-  Future<DocumentReference> _sendMessage({String? text, String? imageUrl, String? audioUrl, String? status}) async {
-    return await _firestore.collection('messages').doc(widget.appt.aID).collection('chat_messages').add({
+  Future<DocumentReference> _sendMessage(
+      {String? text,
+      String? imageUrl,
+      String? audioUrl,
+      String? status}) async {
+    return await _firestore
+        .collection('messages')
+        .doc(widget.appt.aID)
+        .collection('chat_messages')
+        .add({
       'text': text,
       'imageUrl': imageUrl,
       'audioUrl': audioUrl,
@@ -435,9 +456,7 @@ class _DoctorChatPageState extends ConsumerState<DoctorChatPage> {
       'userName': _user.name ?? 'Anonymous',
       'status': status,
     });
-
   }
-
 
   @override
   void dispose() {

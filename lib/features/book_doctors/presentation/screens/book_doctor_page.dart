@@ -265,23 +265,23 @@ class _BookDoctorPageState extends ConsumerState<BookDoctorPage> {
                       label: 'Voice Call',
                     ),
                   ),
-                  (size.width * 8 / 393).ph,
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        selectedIcon = 3;
-                      });
-                    },
-                    child: CommunicationTypeButton(
-                      icon: (selectedIcon == 3)
-                          ? 'assets/icons/svgs/white_chat.svg'
-                          : 'assets/icons/svgs/green_chat.svg',
-                      color: (selectedIcon == 3)
-                          ? Palette.mainGreen
-                          : Palette.highlightGreen,
-                      label: 'Chat',
-                    ),
-                  ),
+                  // (size.width * 8 / 393).ph,
+                  // InkWell(
+                  //   onTap: () {
+                  //     setState(() {
+                  //       selectedIcon = 3;
+                  //     });
+                  //   },
+                  //   child: CommunicationTypeButton(
+                  //     icon: (selectedIcon == 3)
+                  //         ? 'assets/icons/svgs/white_chat.svg'
+                  //         : 'assets/icons/svgs/green_chat.svg',
+                  //     color: (selectedIcon == 3)
+                  //         ? Palette.mainGreen
+                  //         : Palette.highlightGreen,
+                  //     label: 'Chat',
+                  //   ),
+                  // ),
                   (size.width * 8 / 393).ph,
                   InkWell(
                     onTap: () {

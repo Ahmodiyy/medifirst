@@ -33,6 +33,7 @@ final bookDoctorsControllerProvider = Provider<BookDoctorsController>((ref) {
 
 class BookDoctorsController {
   final BookDoctorsRepository _repo;
+
   BookDoctorsController({required BookDoctorsRepository repo}) : _repo = repo;
 
   Stream<List<DoctorInfo>> getDoctorList() {
@@ -83,37 +84,36 @@ class BookDoctorsController {
         startTime: Timestamp.fromDate(startTime),
         endTime: Timestamp.fromDate(endTime),
         reminder: Timestamp.fromDate(remindTime),
-        isScheduled: isScheduled);
+        isScheduled: isScheduled,
+        appointmentHeld: false,
+        paymentHeld: false);
     final res = await _repo.setAppointment(appointment);
     res.fold((l) {
       throw Exception(l.error);
-    }, (r) async {
-      await removeFeeFromBalance(patient.uid, doctor.consultationFee);
-      await removeFeeFromBalance(doctor.doctorId, -1 * doctor.consultationFee);
-      await logTransaction(patient.uid, doctor);
-    });
+    }, (r) async {});
   }
 
-  Future<void> logTransaction(String uid, DoctorInfo doc) async {
+  Future<void> logTransaction(
+      String uid, double amount, String doctorId) async {
     final transId = const Uuid().v4();
     final TransactionModel userTransaction = TransactionModel(
         transactionId: transId,
-        amount: doc.consultationFee.toDouble(),
+        amount: amount,
         bank: '',
         type: 3,
         uid: uid,
         date: Timestamp.fromDate(DateTime.now()),
-        recipientId: doc.doctorId,
+        recipientId: doctorId,
         isCompleted: true,
         isDebit: true);
     final TransactionModel docTransaction = TransactionModel(
         transactionId: transId,
-        amount: doc.consultationFee.toDouble(),
+        amount: amount,
         bank: '',
         type: 4,
         uid: uid,
         date: Timestamp.fromDate(DateTime.now()),
-        recipientId: doc.doctorId,
+        recipientId: doctorId,
         isCompleted: true,
         isDebit: true);
     await _repo.logTransaction(userTransaction);
@@ -121,7 +121,7 @@ class BookDoctorsController {
     return;
   }
 
-  Future<void> addDoctorToFavs(UserInfoModel user, String doctorId)async{
+  Future<void> addDoctorToFavs(UserInfoModel user, String doctorId) async {
     await _repo.addDoctorToFavs(user, doctorId);
   }
 
