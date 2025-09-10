@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -10,12 +9,17 @@ import 'package:medifirst/core/widgets/elements/card_53_image.dart';
 import 'package:medifirst/features/auth/controller/auth_controller.dart';
 import 'package:medifirst/models/appointment_info.dart';
 
+import '../../../book_doctors/controller/book_doctors_controller.dart';
 import '../../../consultation/presentation/screens/chat_page.dart';
 import '../../../consultation/presentation/screens/video_call_screen.dart';
 import '../../../consultation/presentation/screens/voice_call_screen.dart';
+import '../../repository/explore_repository.dart';
+
+final loadingProvider = StateProvider<bool>((ref) => false);
 
 class AppointmentBar extends ConsumerStatefulWidget {
   final AppointmentInfo appointment;
+
   const AppointmentBar({super.key, required this.appointment});
 
   @override
@@ -25,7 +29,7 @@ class AppointmentBar extends ConsumerStatefulWidget {
 class _AppointmentBarState extends ConsumerState<AppointmentBar> {
   @override
   Widget build(BuildContext context) {
-    debugPaintSizeEnabled = false;
+    final isLoading = ref.watch(loadingProvider);
     final AppointmentInfo appointment = widget.appointment;
     final user = ref.watch(userProvider);
     return InkWell(
@@ -136,15 +140,55 @@ class _AppointmentBarState extends ConsumerState<AppointmentBar> {
               ),
             ),
             Flexible(child: Container()),
-            //TODO add correct icon
-            SvgPicture.asset(
-              Data.appointmentIcon[appointment.type]!,
-              colorFilter:
-                  const ColorFilter.mode(Palette.whiteColor, BlendMode.srcIn),
-              fit: BoxFit.scaleDown,
-              height: 24,
-              width: 24,
-            ),
+            appointment.appointmentHeld == false &&
+                    appointment.refundHeld == false &&
+                    DateTime.now().isAfter(appointment.endTime.toDate())
+                ? InkWell(
+                    onTap: isLoading
+                        ? null
+                        : () async {
+                            ref
+                                .read(loadingProvider.notifier)
+                                .update((state) => true);
+                            final controller =
+                                ref.read(bookDoctorsControllerProvider);
+                            await controller.removeFeeFromBalance(
+                                appointment.patientId, -appointment.price);
+                            await ref
+                                .read(exploreRepoProvider)
+                                .updateRefundHeld(
+                                  appt: appointment,
+                                  refundHeld: true,
+                                );
+                            ref
+                                .read(loadingProvider.notifier)
+                                .update((state) => false);
+                            showSuccessSnackbar(context, 'successful');
+                          },
+                    child: isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              color: Palette.consultationDarkGreen,
+                            ),
+                          )
+                        : const Chip(
+                            label: Text(
+                              "Get Refund",
+                              style: TextStyle(
+                                color: Palette.consultationDarkGreen,
+                              ),
+                            ),
+                            color: WidgetStatePropertyAll(Palette.whiteColor),
+                          ),
+                  )
+                : SvgPicture.asset(
+                    Data.appointmentIcon[appointment.type]!,
+                    colorFilter: const ColorFilter.mode(
+                        Palette.whiteColor, BlendMode.srcIn),
+                    fit: BoxFit.scaleDown,
+                    height: 24,
+                    width: 24,
+                  ),
           ],
         ),
       ),
@@ -153,17 +197,19 @@ class _AppointmentBarState extends ConsumerState<AppointmentBar> {
 
   bool isCurrentTimeWithinRange(DateTime startTime, DateTime endTime) {
     DateTime now = DateTime.now();
-    // Debug prints to check values and conditions
-    debugPrint('now: ${now.toString()}');
-    debugPrint('startTime: ${startTime.toString()}');
-    debugPrint('endTime: ${endTime.toString()}');
-    debugPrint(
-        'first condition: ${(now.isAfter(startTime) || now.isAtSameMomentAs(startTime))}');
-    debugPrint(
-        'second condition: ${(now.isBefore(endTime) || now.isAtSameMomentAs(endTime))}');
-
-    // Check if 'now' is within the range of startTime and endTime
     return (now.isAfter(startTime) || now.isAtSameMomentAs(startTime)) &&
         (now.isBefore(endTime) || now.isAtSameMomentAs(endTime));
+  }
+
+  void showSuccessSnackbar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      backgroundColor: Palette.mainGreen,
+      behavior: SnackBarBehavior.floating,
+      duration: const Duration(seconds: 3),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

@@ -191,6 +191,7 @@ class AuthRepository {
             final doctor = DoctorInfo(
                 name: userCred.user!.displayName ?? 'No name',
                 surname: '',
+                email: '',
                 doctorId: userCred.user!.uid,
                 doctorImage:
                     userCred.user!.photoURL ?? Constants.defaultProfilePic,
@@ -353,6 +354,7 @@ class AuthRepository {
           DoctorInfo doctor = DoctorInfo(
               name: name,
               surname: surname,
+              email: email,
               doctorId: uid,
               doctorImage: profilePic,
               profession: expertise!,

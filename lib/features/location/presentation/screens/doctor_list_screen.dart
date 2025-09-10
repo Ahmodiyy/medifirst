@@ -3,15 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:medifirst/core/theming/palette.dart';
 import 'package:medifirst/core/theming/spaces.dart';
-import 'package:medifirst/core/widgets/molecules/places_list_tile.dart';
 import 'package:medifirst/features/auth/controller/auth_controller.dart';
 import 'package:medifirst/features/location/presentation/widgets/doctor_list_tile.dart';
 import 'package:medifirst/features/settings/controller/settings_controller.dart';
 
-import '../../../../core/widgets/atoms/location_search_bar.dart';
 import '../../../../models/healthcare_centre_info.dart';
 import '../../controller/location_controller.dart';
-import 'maps_screen.dart';
 
 class DoctorListScreen extends ConsumerStatefulWidget {
   const DoctorListScreen({super.key});
@@ -176,22 +173,42 @@ class _DoctorListScreenState extends ConsumerState<DoctorListScreen> {
                 child: (selectedTab == 0)
                     ? ref.watch(getDoctorsProvider).when(
                           data: (doctors) {
-                            if (doctors.length == 0) return Container();
+                            if (doctors.isEmpty) {
+                              return Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.all(20),
+                                child: Text(
+                                  'No doctor',
+                                  style: Palette
+                                      .lightModeAppTheme.textTheme.bodyMedium
+                                      ?.copyWith(
+                                    fontSize: 16,
+                                    color: Palette.blackColor,
+                                  ),
+                                ),
+                              );
+                            }
                             return ListView.builder(
-                              itemCount: doctors.length,
+                                itemCount: doctors.length,
                                 itemBuilder: (context, index) {
-                              final doctor = doctors[index];
-                              return DoctorListTile(doctor: doctor);
-                            });
+                                  final doctor = doctors[index];
+                                  return DoctorListTile(doctor: doctor);
+                                });
                           },
                           error: (err, st) {
-                            WidgetsBinding.instance.addPostFrameCallback((_){
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          'Location permissions are permanently denied, we cannot request permissions.')));
-                            });
-                            return null;
+                            return Container(
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.all(20),
+                              child: Text(
+                                err.toString(),
+                                style: Palette
+                                    .lightModeAppTheme.textTheme.bodyMedium
+                                    ?.copyWith(
+                                  fontSize: 16,
+                                  color: Palette.blackColor,
+                                ),
+                              ),
+                            );
                           },
                           loading: () => const Center(
                             child: CircularProgressIndicator(
@@ -201,21 +218,41 @@ class _DoctorListScreenState extends ConsumerState<DoctorListScreen> {
                         )
                     : ref.watch(getFavDoctorsProvider(user.value!)).when(
                           data: (doctors) {
+                            if (doctors.isEmpty) {
+                              return Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.all(20),
+                                child: Text(
+                                  'No favourite',
+                                  style: Palette
+                                      .lightModeAppTheme.textTheme.bodyMedium
+                                      ?.copyWith(
+                                    fontSize: 16,
+                                    color: Palette.blackColor,
+                                  ),
+                                ),
+                              );
+                            }
                             return ListView.builder(
-                              itemCount: doctors.length,
+                                itemCount: doctors.length,
                                 itemBuilder: (context, index) {
-                              final doctor = doctors[index];
-                              return DoctorListTile(doctor: doctor);
-                            });
+                                  final doctor = doctors[index];
+                                  return DoctorListTile(doctor: doctor);
+                                });
                           },
                           error: (err, st) {
-                            print('${err.toString()} ${st.toString()}');
-                            return Text(
-                              'No doctors available',
-                              style: Palette.lightModeAppTheme.textTheme.bodyMedium
-                                  ?.copyWith(
-                                fontSize: 16,
-                                color: Palette.blackColor,
+                            print(err.toString());
+                            return Container(
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.all(20),
+                              child: Text(
+                                err.toString(),
+                                style: Palette
+                                    .lightModeAppTheme.textTheme.bodyMedium
+                                    ?.copyWith(
+                                  fontSize: 16,
+                                  color: Palette.blackColor,
+                                ),
                               ),
                             );
                           },

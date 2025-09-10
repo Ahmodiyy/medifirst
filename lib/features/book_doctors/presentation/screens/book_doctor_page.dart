@@ -70,6 +70,12 @@ class _BookDoctorPageState extends ConsumerState<BookDoctorPage> {
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.requestNotificationsPermission();
+
+    /**   await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestExactAlarmsPermission();
+     **/
     tz.initializeTimeZones(); // Initialize timezone database
   }
 
@@ -97,6 +103,7 @@ class _BookDoctorPageState extends ConsumerState<BookDoctorPage> {
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.dateAndTime,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
     );
   }
 
@@ -137,6 +144,8 @@ class _BookDoctorPageState extends ConsumerState<BookDoctorPage> {
       final controller = ref.read(bookDoctorsControllerProvider);
       final balance = await controller.getWallet(user.uid);
       if (balance >= widget.doctorInfo.consultationFee) {
+        await controller.removeFeeFromBalance(
+            ref.read(userProvider)!.uid, widget.doctorInfo.consultationFee);
         await controller.setAppointment(
             doctor: widget.doctorInfo,
             patient: user,
@@ -166,7 +175,7 @@ class _BookDoctorPageState extends ConsumerState<BookDoctorPage> {
         setState(() {
           loading = false;
         });
-        throw Exception('Top up your balance');
+        throw 'Top up your balance';
       }
     } catch (e) {
       setState(() {
@@ -445,7 +454,6 @@ class _BookDoctorPageState extends ConsumerState<BookDoctorPage> {
               InkWell(
                       onTap: () async {
                         await setAppointment(ref, context, user!);
-                        // Navigator.pop(context);
                       },
                       child: loading
                           ? const CircularProgressIndicator(

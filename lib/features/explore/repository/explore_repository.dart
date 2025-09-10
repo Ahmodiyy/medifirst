@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 import 'package:medifirst/models/appointment_info.dart';
 import 'package:medifirst/models/doctor_info.dart';
 import 'package:medifirst/models/medication_info.dart';
@@ -34,14 +33,15 @@ class ExploreRepository {
   CollectionReference get _users =>
       _firestore.collection(FirebaseConstants.usersCollection);
 
-  CollectionReference get _doctors => _firestore.collection(FirebaseConstants.doctorsCollection);
+  CollectionReference get _doctors =>
+      _firestore.collection(FirebaseConstants.doctorsCollection);
 
   Stream<List<AppointmentInfo>> getUserAppointments(String uid) async* {
     try {
       List<AppointmentInfo> appointments = [];
       final snapshots = _appointments
-          .where('patientId', isEqualTo: uid).orderBy(
-          'startTime', descending: true)
+          .where('patientId', isEqualTo: uid)
+          .orderBy('startTime', descending: true)
           .snapshots();
       await for (var snapshot in snapshots) {
         appointments = snapshot.docs.map((e) {
@@ -50,23 +50,22 @@ class ExploreRepository {
 
         yield appointments;
       }
-      }catch (e) {
+    } catch (e) {
       print('Error in explore repo  : $e');
       rethrow;
     }
-
-
-    }
+  }
 
   Stream<List<MedicationInfo>> getUserMedication(String uid) {
     return _users
-        .doc(uid).collection('medication').orderBy('pickupDate', descending: true)
+        .doc(uid)
+        .collection('medication')
+        .orderBy('pickupDate', descending: true)
         .snapshots()
         .map((event) {
       List<MedicationInfo> medication = [];
       for (var doc in event.docs) {
-        medication
-            .add(MedicationInfo.fromMap(doc.data()));
+        medication.add(MedicationInfo.fromMap(doc.data()));
       }
       return medication;
     });
@@ -74,26 +73,27 @@ class ExploreRepository {
 
   Stream<List<OrderInfo>> getUserOrders(String uid) {
     return _users
-        .doc(uid).collection(FirebaseConstants.ordersCollection).orderBy('orderDate', descending: true)
+        .doc(uid)
+        .collection(FirebaseConstants.ordersCollection)
+        .orderBy('orderDate', descending: true)
         .snapshots()
         .map((event) {
       List<OrderInfo> orders = [];
       for (var doc in event.docs) {
-        orders
-            .add(OrderInfo.fromMap(doc.data()));
+        orders.add(OrderInfo.fromMap(doc.data()));
       }
       return orders;
     });
   }
 
   Stream<List<DoctorInfo>> getTopRatedDoctors() {
-    return _doctors.orderBy('avgRating', descending: true)
+    return _doctors
+        .orderBy('avgRating', descending: true)
         .snapshots()
         .map((event) {
       List<DoctorInfo> doctors = [];
       for (var doc in event.docs) {
-        doctors
-            .add(DoctorInfo.fromMap(doc.data() as Map<String, dynamic>));
+        doctors.add(DoctorInfo.fromMap(doc.data() as Map<String, dynamic>));
       }
       return doctors;
     });
@@ -122,6 +122,24 @@ class ExploreRepository {
     });
   }
 
-
-
+  Future<void> updateRefundHeld({
+    required AppointmentInfo appt,
+    required bool refundHeld,
+  }) async {
+    try {
+      await _appointments.doc(appt.aID).update({
+        'refundHeld': refundHeld,
+      });
+      await _doctors
+          .doc(appt.doctorId)
+          .collection(FirebaseConstants.appointmentsCollection)
+          .doc(appt.aID)
+          .update({
+        'refundHeld': refundHeld,
+      });
+      print('refundHeld field updated successfully');
+    } catch (e) {
+      print('Error updating refundHeld: $e');
+    }
+  }
 }

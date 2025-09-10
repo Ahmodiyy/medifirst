@@ -6,6 +6,7 @@ import 'package:medifirst/models/transaction_model.dart';
 import 'package:medifirst/models/user_info.dart';
 import 'package:uuid/uuid.dart';
 
+//s.dart';
 import '../../../models/doctor_info.dart';
 import '../../../models/rating_model.dart';
 
@@ -86,7 +87,8 @@ class BookDoctorsController {
         reminder: Timestamp.fromDate(remindTime),
         isScheduled: isScheduled,
         appointmentHeld: false,
-        paymentHeld: false);
+        paymentHeld: false,
+        refundHeld: false);
     final res = await _repo.setAppointment(appointment);
     res.fold((l) {
       throw Exception(l.error);

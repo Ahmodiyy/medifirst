@@ -38,13 +38,9 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
       appID: int.parse(
           const String.fromEnvironment('zegoCloudAppId', defaultValue: '1')),
       appSign:
-      const String.fromEnvironment('zegoCloudAppSign', defaultValue: ''),
-      userID: ref
-          .read(userProvider)
-          ?.uid ?? 'Guest',
-      userName: ref
-          .read(userProvider)
-          ?.name ?? 'Guest',
+          const String.fromEnvironment('zegoCloudAppSign', defaultValue: ''),
+      userID: ref.read(userProvider)?.uid ?? 'Guest',
+      userName: ref.read(userProvider)?.name ?? 'Guest',
       plugins: [ZegoUIKitSignalingPlugin()],
     );
   }
@@ -65,9 +61,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
-    final Size size = MediaQuery
-        .of(context)
-        .size;
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Palette.backGroundColor,
       body: SafeArea(
@@ -80,7 +74,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                   SizedBox(height: size.height * 23 / 852),
                   Padding(
                     padding:
-                    EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
+                        EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
                     child: ExploreAppBar(
                         uid: user?.uid ?? '',
                         name: user?.name ?? '',
@@ -91,7 +85,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                   SizedBox(height: size.height * 24 / 852),
                   Padding(
                     padding:
-                    EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
+                        EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
                     child: const SectionHeadingText(heading: 'APPOINTMENTS'),
                   ),
                   SizedBox(height: size.height * 12 / 852),
@@ -111,13 +105,13 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                   SizedBox(height: size.height * 24 / 852),
                   Padding(
                     padding:
-                    EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
+                        EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
                     child: const ExploreCategoryRow(),
                   ),
                   SizedBox(height: size.height * 24 / 852),
                   Padding(
                     padding:
-                    EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
+                        EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
                     child: const SectionHeadingText(heading: 'MEDICATION'),
                   ),
                   SizedBox(height: size.height * 12 / 852),
@@ -135,7 +129,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                   SizedBox(height: size.height * 24 / 852),
                   Padding(
                     padding:
-                    EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
+                        EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
                     child: const SectionHeadingText(heading: 'MY ORDERS'),
                   ),
                   SizedBox(height: size.height * 12 / 852),
@@ -146,9 +140,9 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                   SizedBox(height: size.height * 24 / 852),
                   Padding(
                     padding:
-                    EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
+                        EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
                     child:
-                    const SectionHeadingText(heading: 'TOP RATED DOCTORS'),
+                        const SectionHeadingText(heading: 'TOP RATED DOCTORS'),
                   ),
                   SizedBox(height: size.height * 12 / 852),
                   SizedBox(
@@ -208,81 +202,81 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
 
   Widget _buildAppointmentsList(WidgetRef ref, String uid) {
     return ref.watch(nextAppointmentsProvider(uid)).when(
-      data: (appointments) {
-        if (appointments.isEmpty) {
-          return const Center(child: Text('No appointments scheduled'));
-        }
-        return ListView.builder(
-          scrollDirection: Axis.vertical,
-          itemCount: appointments.length,
-          itemBuilder: (context, index) {
-            final appointment = appointments[index];
-            return AppointmentBar(appointment: appointment);
+          data: (appointments) {
+            if (appointments.isEmpty) {
+              return const Center(child: Text('No appointments scheduled'));
+            }
+            return ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: appointments.length,
+              itemBuilder: (context, index) {
+                final appointment = appointments[index];
+                return AppointmentBar(appointment: appointment);
+              },
+            );
           },
+          error: (err, st) {
+            print('$err $st');
+            return const ErrorText(error: 'No appointments scheduled');
+          },
+          loading: () => const Loader(),
         );
-      },
-      error: (err, st) {
-        print('$err $st');
-        return const ErrorText(error: 'No appointments scheduled');
-      },
-      loading: () => const Loader(),
-    );
   }
 
   Widget _buildMedicationBar(WidgetRef ref, String uid) {
     return ref.watch(nextMedicationProvider(uid)).when(
-      data: (medication) {
-        return MedicationBar(medication: medication);
-      },
-      error: (error, stackTrace) =>
-      const ErrorText(error: 'No medications scheduled'),
-      loading: () => const Loader(),
-    );
+          data: (medication) {
+            return MedicationBar(medication: medication);
+          },
+          error: (error, stackTrace) =>
+              const ErrorText(error: 'No medications scheduled'),
+          loading: () => const Loader(),
+        );
   }
 
   Widget _buildOrderBar(WidgetRef ref, String uid) {
     return ref.watch(nextOrderProvider(uid)).when(
-      data: (order) {
-        return DrugOrderBar(order: order);
-      },
-      error: (error, stackTrace) => const ErrorText(error: 'No orders'),
-      loading: () => const Loader(),
-    );
+          data: (order) {
+            return DrugOrderBar(order: order);
+          },
+          error: (error, stackTrace) => const ErrorText(error: 'No orders'),
+          loading: () => const Loader(),
+        );
   }
 
   Widget _buildTopRatedDoctors(WidgetRef ref, BuildContext context) {
     return ref.watch(topRatedDoctorsProvider).when(
-      data: (doctors) {
-        return ListView.builder(
-            itemCount: doctors.length >= 3 ? 3 : doctors.length,
-            itemBuilder: (context, index) {
-              if (doctors.isNotEmpty) {
-                final doctor = doctors[index];
-                if (index <= 3) {
-                  return InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  DoctorDetailsPage(doctorInfo: doctor)));
-                    },
-                    child: TopRatedDoctorBar(
-                      doctor: doctor,
-                    ),
-                  );
-                }
-              } else {
-                return const Center(
-                    child: ErrorText(error: 'No notifications available'));
-              }
-              return null;
-            });
-      },
-      error: (error, stackTrace) =>
-      const ErrorText(error: 'No doctors listed'),
-      loading: () => const Loader(),
-    );
+          data: (doctors) {
+            return ListView.builder(
+                itemCount: doctors.length >= 3 ? 3 : doctors.length,
+                itemBuilder: (context, index) {
+                  if (doctors.isNotEmpty) {
+                    final doctor = doctors[index];
+                    if (index <= 3) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      DoctorDetailsPage(doctorInfo: doctor)));
+                        },
+                        child: TopRatedDoctorBar(
+                          doctor: doctor,
+                        ),
+                      );
+                    }
+                  } else {
+                    return const Center(
+                        child: ErrorText(error: 'No notifications available'));
+                  }
+                  return null;
+                });
+          },
+          error: (error, stackTrace) =>
+              const ErrorText(error: 'No doctors listed'),
+          loading: () => const Loader(),
+        );
   }
 }
 
