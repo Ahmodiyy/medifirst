@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:medifirst/core/constants/data.dart';
 import 'package:medifirst/core/theming/palette.dart';
 import 'package:medifirst/core/theming/spaces.dart';
 import 'package:medifirst/core/widgets/elements/card_53_image.dart';
@@ -27,14 +26,16 @@ class AppointmentBar extends ConsumerStatefulWidget {
 }
 
 class _AppointmentBarState extends ConsumerState<AppointmentBar> {
+  late AppointmentInfo appointment;
+
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(loadingProvider);
-    final AppointmentInfo appointment = widget.appointment;
+    appointment = widget.appointment;
     final user = ref.watch(userProvider);
     return InkWell(
       onTap: () {
-        bool isNowWithinRange = isCurrentTimeWithinRange(
+        bool isNowWithinRange = _isCurrentTimeWithinRange(
             appointment.startTime.toDate(), appointment.endTime.toDate());
         if (isNowWithinRange) {
           if (appointment.type == 3) {
@@ -67,9 +68,8 @@ class _AppointmentBarState extends ConsumerState<AppointmentBar> {
         width: double.infinity,
         height: 100,
         padding: const EdgeInsets.only(left: 10, right: 10),
-        decoration: const BoxDecoration(
-          color: Palette.mainGreen,
-          // borderRadius: BorderRadius.circular(10),
+        decoration: BoxDecoration(
+          color: checkTime() ? Palette.mainGreen : Palette.whiteColor,
         ),
         child: Row(
           children: [
@@ -90,25 +90,25 @@ class _AppointmentBarState extends ConsumerState<AppointmentBar> {
                       appointment.doctorName,
                       style: Palette.lightModeAppTheme.textTheme.titleSmall
                           ?.copyWith(
-                        color: Colors.white,
+                        color: checkTime()
+                            ? Palette.whiteColor
+                            : Palette.blackColor,
                         letterSpacing: 1,
                       ),
                     ),
                   ),
-
-                  //TODO add doctor type
                   Flexible(
                     child: Text(
                       appointment.doctorType,
                       style: Palette.lightModeAppTheme.textTheme.bodySmall
                           ?.copyWith(
-                        color: Colors.white,
+                        color: checkTime()
+                            ? Palette.whiteColor
+                            : Palette.blackColor,
                         letterSpacing: 1,
                       ),
                     ),
                   ),
-
-                  //TODO add correct date
                   Flexible(
                     child: Row(
                       children: [
@@ -117,7 +117,9 @@ class _AppointmentBarState extends ConsumerState<AppointmentBar> {
                               .format(appointment.startTime.toDate()),
                           style: Palette.lightModeAppTheme.textTheme.bodySmall
                               ?.copyWith(
-                            color: Colors.white,
+                            color: checkTime()
+                                ? Palette.whiteColor
+                                : Palette.blackColor,
                             fontSize: 12,
                             letterSpacing: 1,
                           ),
@@ -128,7 +130,9 @@ class _AppointmentBarState extends ConsumerState<AppointmentBar> {
                               .format(appointment.startTime.toDate()),
                           style: Palette.lightModeAppTheme.textTheme.bodySmall
                               ?.copyWith(
-                            color: Colors.white,
+                            color: checkTime()
+                                ? Palette.whiteColor
+                                : Palette.blackColor,
                             fontSize: 12,
                             letterSpacing: 1,
                           ),
@@ -182,7 +186,7 @@ class _AppointmentBarState extends ConsumerState<AppointmentBar> {
                           ),
                   )
                 : SvgPicture.asset(
-                    Data.appointmentIcon[appointment.type]!,
+                    _getIcon(),
                     colorFilter: const ColorFilter.mode(
                         Palette.whiteColor, BlendMode.srcIn),
                     fit: BoxFit.scaleDown,
@@ -195,10 +199,35 @@ class _AppointmentBarState extends ConsumerState<AppointmentBar> {
     );
   }
 
-  bool isCurrentTimeWithinRange(DateTime startTime, DateTime endTime) {
+  String _getIcon() {
+    switch (appointment.type) {
+      case 1:
+        if (checkTime()) {
+          return 'assets/icons/svgs/white_video_call.svg';
+        }
+        return 'assets/icons/svgs/green_video_call.svg';
+      case 2:
+        if (checkTime()) {
+          return 'assets/icons/svgs/white_call.svg';
+        }
+        return 'assets/icons/svgs/green_call.svg';
+      default:
+        if (checkTime()) {
+          return 'assets/icons/svgs/white_chat.svg';
+        }
+        return 'assets/icons/svgs/green_chat.svg';
+    }
+  }
+
+  bool _isCurrentTimeWithinRange(DateTime startTime, DateTime endTime) {
     DateTime now = DateTime.now();
     return (now.isAfter(startTime) || now.isAtSameMomentAs(startTime)) &&
         (now.isBefore(endTime) || now.isAtSameMomentAs(endTime));
+  }
+
+  bool checkTime() {
+    return DateTime.now().isAfter(appointment.startTime.toDate()) &&
+        DateTime.now().isBefore(appointment.endTime.toDate());
   }
 
   void showSuccessSnackbar(BuildContext context, String message) {
