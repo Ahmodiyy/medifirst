@@ -76,41 +76,40 @@ class AppointmentShortInfoBar extends ConsumerWidget {
               (DateTime.now().isAfter(appointment.startTime.toDate()) &&
                       DateTime.now().isBefore(appointment.endTime.toDate()))
                   ? Text(
-                    'Now',
-                    style: Palette.lightModeAppTheme.textTheme.bodySmall
-                        ?.copyWith(
-                          letterSpacing: -0.4,
-                          color:
-                              checkTime()
-                                  ? Palette.whiteColor
-                                  : Palette.blackColor,
-                        ),
-                  )
-                  : RichText(
-                    text: TextSpan(
-                      text: DateFormat(
-                        'dd/MM/yyyy',
-                      ).format(appointment.startTime.toDate()),
+                      'Now',
                       style: Palette.lightModeAppTheme.textTheme.bodySmall
                           ?.copyWith(
-                            letterSpacing: -0.4,
-                            color: Palette.smallBodyGray,
-                          ),
-                      children: [
-                        const TextSpan(text: ' '),
-                        TextSpan(
-                          text: DateFormat.jm().format(
-                            appointment.startTime.toDate(),
-                          ),
-                          style: Palette.lightModeAppTheme.textTheme.bodySmall
-                              ?.copyWith(
-                                letterSpacing: -0.4,
-                                color: Palette.smallBodyGray,
-                              ),
+                        letterSpacing: -0.4,
+                        color: checkTime()
+                            ? Palette.whiteColor
+                            : Palette.blackColor,
+                      ),
+                    )
+                  : RichText(
+                      text: TextSpan(
+                        text: DateFormat(
+                          'dd/MM/yyyy',
+                        ).format(appointment.startTime.toDate()),
+                        style: Palette.lightModeAppTheme.textTheme.bodySmall
+                            ?.copyWith(
+                          letterSpacing: -0.4,
+                          color: Palette.smallBodyGray,
                         ),
-                      ],
+                        children: [
+                          const TextSpan(text: ' '),
+                          TextSpan(
+                            text: DateFormat.jm().format(
+                              appointment.startTime.toDate(),
+                            ),
+                            style: Palette.lightModeAppTheme.textTheme.bodySmall
+                                ?.copyWith(
+                              letterSpacing: -0.4,
+                              color: Palette.smallBodyGray,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
             ],
           ),
           Flexible(child: Container()),
@@ -118,26 +117,9 @@ class AppointmentShortInfoBar extends ConsumerWidget {
                   appointment.paymentHeld == false &&
                   DateTime.now().isAfter(appointment.endTime.toDate())
               ? InkWell(
-                child:
-                    isLoading
-                        ? const Center(
-                          child: CircularProgressIndicator(
-                            color: Palette.consultationDarkGreen,
-                          ),
-                        )
-                        : const Chip(
-                          label: Text(
-                            "Get Payment",
-                            style: TextStyle(
-                              color: Palette.consultationDarkGreen,
-                            ),
-                          ),
-                          color: WidgetStatePropertyAll(Palette.whiteColor),
-                        ),
-                onTap:
-                    isLoading
-                        ? null
-                        : () async {
+                  onTap: isLoading
+                      ? null
+                      : () async {
                           ref
                               .read(loadingProvider.notifier)
                               .update((state) => true);
@@ -146,9 +128,11 @@ class AppointmentShortInfoBar extends ConsumerWidget {
                             appointment.patientId,
                             appointment.price,
                           );
+                          double amountAfterPercentage =
+                              appointment.price * 0.8;
                           await book.removeFeeFromBalance(
                             appointment.doctorId,
-                            -1 * appointment.price,
+                            (-1 * amountAfterPercentage).toInt(),
                           );
                           await ref
                               .read(doctorChatRepoProvider)
@@ -158,7 +142,7 @@ class AppointmentShortInfoBar extends ConsumerWidget {
                               );
                           await book.logTransaction(
                             appointment.patientId,
-                            appointment.price.toDouble(),
+                            amountAfterPercentage.toDouble(),
                             appointment.doctorId,
                           );
                           ref
@@ -166,7 +150,22 @@ class AppointmentShortInfoBar extends ConsumerWidget {
                               .update((state) => false);
                           showSuccessSnackbar(context, 'successful');
                         },
-              )
+                  child: isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Palette.consultationDarkGreen,
+                          ),
+                        )
+                      : const Chip(
+                          label: Text(
+                            "Get Payment",
+                            style: TextStyle(
+                              color: Palette.consultationDarkGreen,
+                            ),
+                          ),
+                          color: WidgetStatePropertyAll(Palette.whiteColor),
+                        ),
+                )
               : SvgPicture.asset(_getIcon(), width: 24, height: 24),
         ],
       ).sidePad(16).topPad(20),

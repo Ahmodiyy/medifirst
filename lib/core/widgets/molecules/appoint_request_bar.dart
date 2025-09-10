@@ -48,6 +48,12 @@ class _AppointRequestBarState extends ConsumerState<AppointmentRequestBar> {
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.requestNotificationsPermission();
+    /**
+        await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestExactAlarmsPermission();
+     **/
     tz.initializeTimeZones(); // Initialize timezone database
   }
 
@@ -75,6 +81,7 @@ class _AppointRequestBarState extends ConsumerState<AppointmentRequestBar> {
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.dateAndTime,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
     );
   }
 
