@@ -21,20 +21,17 @@ class AppointmentShortInfoBar extends ConsumerWidget {
   String _getIcon() {
     switch (appointment.type) {
       case 1:
-        if (DateTime.now().isAfter(appointment.startTime.toDate()) &&
-            DateTime.now().isBefore(appointment.endTime.toDate())) {
+        if (checkTime()) {
           return 'assets/icons/svgs/white_video_call.svg';
         }
         return 'assets/icons/svgs/green_video_call.svg';
       case 2:
-        if (DateTime.now().isAfter(appointment.startTime.toDate()) &&
-            DateTime.now().isBefore(appointment.endTime.toDate())) {
+        if (checkTime()) {
           return 'assets/icons/svgs/white_call.svg';
         }
         return 'assets/icons/svgs/green_call.svg';
       default:
-        if (DateTime.now().isAfter(appointment.startTime.toDate()) &&
-            DateTime.now().isBefore(appointment.endTime.toDate())) {
+        if (checkTime()) {
           return 'assets/icons/svgs/white_chat.svg';
         }
         return 'assets/icons/svgs/green_chat.svg';
