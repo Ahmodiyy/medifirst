@@ -18,6 +18,7 @@ class AppointmentInfo {
   final bool isScheduled;
   final bool appointmentHeld;
   final bool paymentHeld;
+  final bool refundHeld;
 
 //<editor-fold desc="Data Methods">
   const AppointmentInfo({
@@ -38,6 +39,7 @@ class AppointmentInfo {
     required this.isScheduled,
     required this.appointmentHeld,
     required this.paymentHeld,
+    required this.refundHeld,
   });
 
   AppointmentInfo copyWith({
@@ -58,6 +60,7 @@ class AppointmentInfo {
     bool? isScheduled,
     bool? appointmentHeld,
     bool? paymentHeld,
+    bool? refundHeld,
   }) {
     return AppointmentInfo(
       aID: aID ?? this.aID,
@@ -77,6 +80,7 @@ class AppointmentInfo {
       isScheduled: isScheduled ?? this.isScheduled,
       appointmentHeld: appointmentHeld ?? this.appointmentHeld,
       paymentHeld: paymentHeld ?? this.paymentHeld,
+      refundHeld: refundHeld ?? this.refundHeld,
     );
   }
 
@@ -99,6 +103,7 @@ class AppointmentInfo {
       'isScheduled': this.isScheduled,
       'appointmentHeld': this.appointmentHeld,
       'paymentHeld': this.paymentHeld,
+      'refundHeld': this.refundHeld,
     };
   }
 
@@ -121,6 +126,7 @@ class AppointmentInfo {
       isScheduled: map['isScheduled'] as bool,
       appointmentHeld: map['appointmentHeld'] as bool,
       paymentHeld: map['paymentHeld'] as bool,
+      refundHeld: map['refundHeld'] as bool,
     );
   }
 }

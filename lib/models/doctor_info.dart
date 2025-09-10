@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class DoctorInfo{
+class DoctorInfo {
   final String name;
   final String surname;
+  final String email;
   final String doctorImage;
   final String doctorId;
   final String profession;
@@ -33,6 +34,7 @@ class DoctorInfo{
   const DoctorInfo({
     required this.name,
     required this.surname,
+    required this.email,
     required this.doctorId,
     required this.doctorImage,
     required this.profession,
@@ -59,69 +61,70 @@ class DoctorInfo{
     required this.licenseExpiration,
   });
 
-  DoctorInfo copyWith({
-    String? name,
-    String? surname,
-    String? doctorId,
-    String? doctorImage,
-    String? profession,
-    String? address,
-    double? latitude,
-    double? longitude,
-    String? number,
-    String? fcmToken,
-    TimeOfDay? openingHours,
-    TimeOfDay? closingHours,
-    int? numberOfReviews,
-    int? totalRatings,
-    double? avgRating,
-    int? consultationFee,
-    String? licenseNumber,
-    int? age,
-    String? bio,
-    String? state,
-    String? lga,
-    int? yearsOfExperience,
-    List<String>? certificateImages,
-    String? qualifications,
-    List<String>? favourites,
-    DateTime? licenseExpiration
-  }) {
+  DoctorInfo copyWith(
+      {String? name,
+      String? surname,
+      String? email,
+      String? doctorId,
+      String? doctorImage,
+      String? profession,
+      String? address,
+      double? latitude,
+      double? longitude,
+      String? number,
+      String? fcmToken,
+      TimeOfDay? openingHours,
+      TimeOfDay? closingHours,
+      int? numberOfReviews,
+      int? totalRatings,
+      double? avgRating,
+      int? consultationFee,
+      String? licenseNumber,
+      int? age,
+      String? bio,
+      String? state,
+      String? lga,
+      int? yearsOfExperience,
+      List<String>? certificateImages,
+      String? qualifications,
+      List<String>? favourites,
+      DateTime? licenseExpiration}) {
     this.certificateImages.addAll(certificateImages ?? []);
     return DoctorInfo(
-      name: name ?? this.name,
-      surname: surname ?? this.surname,
-      doctorId: doctorId ?? this.doctorId,
-      doctorImage: doctorImage ?? this.doctorImage,
-      profession: profession ?? this.profession,
-      number: number ?? this.number,
-      address: address ?? this.address,
-      latitude: latitude ?? this.latitude,
-      longitude: longitude ?? this.longitude,
-      openingHours: openingHours ?? this.openingHours,
-      closingHours: closingHours ?? this.closingHours,
-      numberOfReviews: numberOfReviews ?? this.numberOfReviews,
-      totalRating: totalRatings ?? totalRating,
-      avgRating: avgRating ?? this.avgRating,
-      consultationFee: consultationFee ?? this.consultationFee,
-      licenseNumber: licenseNumber ?? this.licenseNumber,
-      age: age ?? this.age,
-      bio: bio ?? this.bio,
-      state: state ?? this.state,
-      lga: lga ?? this.lga,
-      fcmToken: fcmToken ?? this.fcmToken,
-      yearsOfExperience: yearsOfExperience ?? this.yearsOfExperience,
-      certificateImages: this.certificateImages,
-      qualifications: qualifications ?? this.qualifications,
-      favourites: favourites ?? this.favourites,
-        licenseExpiration : licenseExpiration?? this.licenseExpiration
-    );
+        name: name ?? this.name,
+        surname: surname ?? this.surname,
+        email: email ?? this.email,
+        doctorId: doctorId ?? this.doctorId,
+        doctorImage: doctorImage ?? this.doctorImage,
+        profession: profession ?? this.profession,
+        number: number ?? this.number,
+        address: address ?? this.address,
+        latitude: latitude ?? this.latitude,
+        longitude: longitude ?? this.longitude,
+        openingHours: openingHours ?? this.openingHours,
+        closingHours: closingHours ?? this.closingHours,
+        numberOfReviews: numberOfReviews ?? this.numberOfReviews,
+        totalRating: totalRatings ?? totalRating,
+        avgRating: avgRating ?? this.avgRating,
+        consultationFee: consultationFee ?? this.consultationFee,
+        licenseNumber: licenseNumber ?? this.licenseNumber,
+        age: age ?? this.age,
+        bio: bio ?? this.bio,
+        state: state ?? this.state,
+        lga: lga ?? this.lga,
+        fcmToken: fcmToken ?? this.fcmToken,
+        yearsOfExperience: yearsOfExperience ?? this.yearsOfExperience,
+        certificateImages: this.certificateImages,
+        qualifications: qualifications ?? this.qualifications,
+        favourites: favourites ?? this.favourites,
+        licenseExpiration: licenseExpiration ?? this.licenseExpiration);
   }
 
   Map<String, dynamic> toMap() {
     return {
       'name': name,
       'surname': surname,
+      'email': email,
       'doctorId': doctorId,
       'doctorImage': doctorImage,
       'profession': profession,
@@ -151,14 +154,17 @@ class DoctorInfo{
 
   factory DoctorInfo.fromMap(Map<String, dynamic> map) {
     final TimeOfDay openingHours = TimeOfDay(
-        hour: int.parse(map['openingHours'].toString().split("*").first),
-        minute: int.parse(map['openingHours'].toString().split("*").last),);
+      hour: int.parse(map['openingHours'].toString().split("*").first),
+      minute: int.parse(map['openingHours'].toString().split("*").last),
+    );
     final TimeOfDay closingHours = TimeOfDay(
       hour: int.parse(map['closingHours'].toString().split("*").first),
-      minute: int.parse(map['closingHours'].toString().split("*").last),);
+      minute: int.parse(map['closingHours'].toString().split("*").last),
+    );
     return DoctorInfo(
       name: map['name'] as String,
       surname: map['surname'] as String,
+      email: map['email'] as String,
       doctorId: map['doctorId'] as String,
       doctorImage: map['doctorImage'] as String,
       profession: map['profession'] as String,
@@ -182,7 +188,8 @@ class DoctorInfo{
       certificateImages: List<String>.from(map['certificateImages']),
       qualifications: map['qualifications'] as String,
       favourites: List<String>.from(map['favourites']),
-      licenseExpiration: (map['licenseExpiration'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      licenseExpiration:
+          (map['licenseExpiration'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
 
