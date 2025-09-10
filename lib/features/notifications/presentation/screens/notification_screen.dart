@@ -27,7 +27,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
         centerTitle: true,
         automaticallyImplyLeading: false,
         title: Text(
-          'Notifications',
+          'Appointments',
           style: Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
             fontSize: 20,
           ),
