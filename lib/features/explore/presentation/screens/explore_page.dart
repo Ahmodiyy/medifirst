@@ -208,7 +208,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
             }
             return ListView.builder(
               scrollDirection: Axis.vertical,
-              itemCount: appointments.length,
+              itemCount: 1,
               itemBuilder: (context, index) {
                 final appointment = appointments[index];
                 return AppointmentBar(appointment: appointment);

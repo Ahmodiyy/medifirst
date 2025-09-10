@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medifirst/core/theming/palette.dart';
-import 'package:medifirst/core/theming/spaces.dart';
 import 'package:medifirst/core/widgets/elements/error_text.dart';
 import 'package:medifirst/core/widgets/elements/loader.dart';
 import 'package:medifirst/features/auth/controller/auth_controller.dart';
-import 'package:medifirst/features/notifications/controller/notification_controller.dart';
-import 'package:medifirst/features/notifications/presentation/widgets/notification_bar.dart';
+
+import '../../../explore/controller/explore_controller.dart';
+import '../../../explore/presentation/widgets/appointment_bar.dart';
 
 class NotificationScreen extends ConsumerStatefulWidget {
   const NotificationScreen({super.key});
@@ -33,34 +33,30 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
           ),
         ),
       ),
-      body: SizedBox(
-        height: size.height * 707 / 852,
-        child: ref.watch(getNotificationsProvider(user!.uid)).when(
-              data: (notifications) {
-                return ListView.builder(itemCount: notifications.isEmpty? 0:notifications.length,itemBuilder: (context, index) {
-                  if (notifications.isEmpty) {
-                    return const Center(
-                      child: ErrorText(error: 'No notifications available'));
-                  }
-                  final notif = notifications[index];
-                  return Column(
-                    children: [
-                      NotificationBar(notification: notif)
-                          .sidePad(size.width * 16 / 393),
-                      (size.height * 16 / 852).pv,
-                      const Divider(
-                        thickness: 1,
-                        color: Palette.dividerGray,
-                      ).alignRight().sidePad(size.width * 16 / 393),
-                    ],
-                  );
-                });
-              },
-              error: (er, st) => const Center(
-                  child: ErrorText(error: 'No notifications available')),
-              loading: () => const Loader(),
-            ),
-      ),
+      body: _buildAppointmentsList(ref, user?.uid ?? ''),
     );
+  }
+
+  Widget _buildAppointmentsList(WidgetRef ref, String uid) {
+    return ref.watch(nextAppointmentsProvider(uid)).when(
+          data: (appointments) {
+            if (appointments.isEmpty) {
+              return const Center(child: Text('No appointments scheduled'));
+            }
+            return ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: appointments.length,
+              itemBuilder: (context, index) {
+                final appointment = appointments[index];
+                return AppointmentBar(appointment: appointment);
+              },
+            );
+          },
+          error: (err, st) {
+            print('$err $st');
+            return const ErrorText(error: 'No appointments scheduled');
+          },
+          loading: () => const Loader(),
+        );
   }
 }
