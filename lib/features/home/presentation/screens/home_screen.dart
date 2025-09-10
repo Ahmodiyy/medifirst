@@ -96,7 +96,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   height: 24,
                   width: 24,
                 ),
-                text: 'Notifications',
+                text: 'Appointments',
               ),
               Tab(
                 icon: SvgPicture.asset(
