@@ -11,6 +11,7 @@ final appointmentListRepoProvider = Provider<AppointmentListRepository>((ref) {
 
 class AppointmentListRepository {
   final FirebaseFirestore _firestore;
+
   const AppointmentListRepository({required FirebaseFirestore firestore})
       : _firestore = firestore;
 
@@ -32,30 +33,24 @@ class AppointmentListRepository {
   }
 
   Stream<List<AppointmentInfo>> getDoctorAppointmentRequests(String doctorId) {
-    print('DOCTORID => $doctorId');
-    return _doctors
-        .doc(doctorId)
-        .collection(FirebaseConstants.appointmentsCollection)
+    return _appointments
+        .where('doctorId', isEqualTo: doctorId)
         .where('status', isEqualTo: 1)
         .snapshots()
         .map((event) {
       return event.docs.map((e) {
-        print(e.data().toString());
         return AppointmentInfo.fromMap(e.data() as Map<String, dynamic>);
       }).toList();
     });
   }
 
   Stream<List<AppointmentInfo>> getDoctorAppointment(String doctorId) {
-    print('DOCTORID => $doctorId');
-    return _doctors
-        .doc(doctorId)
-        .collection(FirebaseConstants.appointmentsCollection)
+    return _appointments
+        .where('doctorId', isEqualTo: doctorId)
         .where('status', isEqualTo: 2)
         .snapshots()
         .map((event) {
       return event.docs.map((e) {
-        print(e.data().toString());
         return AppointmentInfo.fromMap(e.data() as Map<String, dynamic>);
       }).toList();
     });
@@ -106,11 +101,6 @@ class AppointmentListRepository {
   Future<void> acceptAppointmentRequest(AppointmentInfo appt) async {
     try {
       await _appointments.doc(appt.aID).set(appt.toMap());
-      await _doctors
-          .doc(appt.doctorId)
-          .collection(FirebaseConstants.appointmentsCollection)
-          .doc(appt.aID)
-          .set(appt.toMap());
     } on FirebaseException catch (e) {
       throw Exception(e.message!);
     } catch (e) {
@@ -120,12 +110,7 @@ class AppointmentListRepository {
 
   Future<void> rejectAppointmentRequest(AppointmentInfo appt) async {
     try {
-      // await _appointments.doc(appt.aID).set(appt.toMap());
-      await _doctors
-          .doc(appt.doctorId)
-          .collection(FirebaseConstants.appointmentsCollection)
-          .doc(appt.aID)
-          .set(appt.toMap());
+      await _appointments.doc(appt.aID).set(appt.toMap());
     } on FirebaseException catch (e) {
       throw Exception(e.message!);
     } catch (e) {

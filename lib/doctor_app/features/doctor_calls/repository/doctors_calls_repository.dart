@@ -31,16 +31,8 @@ class ChatRepository {
       await _appointments.doc(appt.aID).update({
         'appointmentHeld': appointmentHeld,
       });
-      await _doctors
-          .doc(appt.doctorId)
-          .collection(FirebaseConstants.appointmentsCollection)
-          .doc(appt.aID)
-          .update({
-        'appointmentHeld': appointmentHeld,
-      });
-      print('appointmentHeld field updated successfully');
     } catch (e) {
-      print('Error updating appointmentHeld: $e');
+      rethrow;
     }
   }
 
@@ -52,16 +44,8 @@ class ChatRepository {
       await _appointments.doc(appt.aID).update({
         'paymentHeld': paymentHeld,
       });
-      await _doctors
-          .doc(appt.doctorId)
-          .collection(FirebaseConstants.appointmentsCollection)
-          .doc(appt.aID)
-          .update({
-        'paymentHeld': paymentHeld,
-      });
-      print('paymentHeld field updated successfully');
     } catch (e) {
-      print('Error updating paymentHeld: $e');
+      rethrow;
     }
   }
 }

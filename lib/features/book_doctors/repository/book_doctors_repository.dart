@@ -20,6 +20,7 @@ final bookDoctorsRepoProvider = Provider<BookDoctorsRepository>((ref) {
 
 class BookDoctorsRepository {
   final FirebaseFirestore _firestore;
+
   BookDoctorsRepository({required FirebaseFirestore firestore})
       : _firestore = firestore;
 
@@ -81,11 +82,6 @@ class BookDoctorsRepository {
 
   FutureVoid setAppointment(AppointmentInfo appointment) async {
     try {
-      await _doctors
-          .doc(appointment.doctorId)
-          .collection(FirebaseConstants.appointmentsCollection)
-          .doc(appointment.aID)
-          .set(appointment.toMap());
       await _appointments.doc(appointment.aID).set(appointment.toMap());
       return right(null);
     } on FirebaseException catch (e) {
