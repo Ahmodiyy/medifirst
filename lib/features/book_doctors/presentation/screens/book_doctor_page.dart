@@ -68,10 +68,11 @@ class _BookDoctorPageState extends ConsumerState<BookDoctorPage> {
     );
 
     final granted = await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestNotificationsPermission();
-    if (!granted!) {
+            .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin>()
+            ?.requestNotificationsPermission() ??
+        false;
+    if (!granted) {
       // Optionally open the app-info screen so the user can toggle it
       openAppSettings();
     }
