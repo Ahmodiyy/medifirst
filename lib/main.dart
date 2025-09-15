@@ -22,7 +22,6 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print("🔙 Background message: ${message.messageId}");
 }
 
 void main() async {
@@ -64,9 +63,6 @@ void main() async {
 
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print(
-          '📥 Received a message while in foreground: ${message.notification?.title}');
-
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
 
