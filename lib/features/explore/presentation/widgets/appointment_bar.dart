@@ -157,7 +157,7 @@ class _AppointmentBarState extends ConsumerState<AppointmentBar> {
                             final controller =
                                 ref.read(bookDoctorsControllerProvider);
                             await controller.removeFeeFromBalance(
-                                appointment.patientId, -appointment.price);
+                                appointment.patientId, -1 * appointment.price);
                             await ref
                                 .read(exploreRepoProvider)
                                 .updateRefundHeld(
