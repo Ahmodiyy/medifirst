@@ -16,6 +16,7 @@ import 'package:medifirst/features/book_doctors/presentation/widgets/communicati
 import 'package:medifirst/features/book_doctors/presentation/widgets/set_time_section.dart';
 import 'package:medifirst/models/doctor_info.dart';
 import 'package:medifirst/models/user_info.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -66,16 +67,14 @@ class _BookDoctorPageState extends ConsumerState<BookDoctorPage> {
       onDidReceiveBackgroundNotificationResponse: onDidReceiveNotification,
     );
 
-    await flutterLocalNotificationsPlugin
+    final granted = await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.requestNotificationsPermission();
-
-    /**   await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestExactAlarmsPermission();
-     **/
+    if (!granted!) {
+      // Optionally open the app-info screen so the user can toggle it
+      openAppSettings();
+    }
     tz.initializeTimeZones(); // Initialize timezone database
   }
 
