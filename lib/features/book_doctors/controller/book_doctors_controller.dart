@@ -98,7 +98,17 @@ class BookDoctorsController {
   Future<void> logTransaction(
       String uid, double amount, String doctorId) async {
     final transId = const Uuid().v4();
-    final TransactionModel userTransaction = TransactionModel(
+    /**  final TransactionModel userTransaction = TransactionModel(
+        transactionId: transId,
+        amount: amount,
+        bank: '',
+        type: 3,
+        uid: uid,
+        date: Timestamp.fromDate(DateTime.now()),
+        recipientId: doctorId,
+        isCompleted: true,
+        isDebit: true);**/
+    final TransactionModel docTransaction = TransactionModel(
         transactionId: transId,
         amount: amount,
         bank: '',
@@ -108,17 +118,6 @@ class BookDoctorsController {
         recipientId: doctorId,
         isCompleted: true,
         isDebit: true);
-    final TransactionModel docTransaction = TransactionModel(
-        transactionId: transId,
-        amount: amount,
-        bank: '',
-        type: 4,
-        uid: uid,
-        date: Timestamp.fromDate(DateTime.now()),
-        recipientId: doctorId,
-        isCompleted: true,
-        isDebit: true);
-    await _repo.logTransaction(userTransaction);
     await _repo.logTransaction(docTransaction);
     return;
   }

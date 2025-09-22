@@ -22,6 +22,7 @@ import 'package:timezone/timezone.dart' as tz;
 
 import '../../../../core/theming/palette.dart';
 import '../../../../core/widgets/elements/section_heading_text.dart';
+import '../../../../main.dart';
 
 class BookDoctorPage extends ConsumerStatefulWidget {
   final DoctorInfo doctorInfo;
@@ -33,7 +34,6 @@ class BookDoctorPage extends ConsumerStatefulWidget {
 }
 
 class _BookDoctorPageState extends ConsumerState<BookDoctorPage> {
-  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   int selectedIcon = 1;
   bool isRepeated = false;
   DateTime? selectedDate = DateTime.now();
@@ -50,7 +50,6 @@ class _BookDoctorPageState extends ConsumerState<BookDoctorPage> {
   ];
 
   Future<void> initializeNotifications() async {
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     const AndroidInitializationSettings androidInitializationSettings =
         AndroidInitializationSettings("@mipmap/ic_launcher");
     const DarwinInitializationSettings iOSInitializationSettings =
@@ -73,7 +72,6 @@ class _BookDoctorPageState extends ConsumerState<BookDoctorPage> {
             ?.requestNotificationsPermission() ??
         false;
     if (!granted) {
-      // Optionally open the app-info screen so the user can toggle it
       openAppSettings();
     }
     tz.initializeTimeZones(); // Initialize timezone database
