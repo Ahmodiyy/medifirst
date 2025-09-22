@@ -39,11 +39,11 @@ class DoctorTransactionHistoryScreen extends ConsumerWidget {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              (size.height * 22 / 852).pv,
-              Row(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
@@ -56,7 +56,7 @@ class DoctorTransactionHistoryScreen extends ConsumerWidget {
                                 fontSize: 17, color: Palette.hintTextGray),
                       ),
                       (size.width * 7 / 393).ph,
-                      Icon(
+                      const Icon(
                         Icons.keyboard_arrow_down_rounded,
                         size: 24,
                         color: Palette.highlightTextGray,
@@ -73,7 +73,7 @@ class DoctorTransactionHistoryScreen extends ConsumerWidget {
                                 fontSize: 17, color: Palette.hintTextGray),
                       ),
                       (size.width * 7 / 393).ph,
-                      Icon(
+                      const Icon(
                         Icons.keyboard_arrow_down_rounded,
                         size: 24,
                         color: Palette.highlightTextGray,
@@ -81,10 +81,11 @@ class DoctorTransactionHistoryScreen extends ConsumerWidget {
                     ],
                   ),
                 ],
-              ).sidePad(size.width * 16 / 393),
-              (size.height * 20 / 852).pv,
-              SizedBox(
-                height: size.height * 641 / 852,
+              ),
+            ),
+            (size.height * 20 / 852).pv,
+            Expanded(
+              child: Container(
                 child: ref
                     .watch(getDoctorTransactionsProvider(doctor!.doctorId))
                     .when(
@@ -94,6 +95,8 @@ class DoctorTransactionHistoryScreen extends ConsumerWidget {
                           itemBuilder: (context, index) {
                             final transaction = transactions[index];
                             return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 TransactionListTile(transaction: transaction),
                                 Divider(
@@ -107,12 +110,12 @@ class DoctorTransactionHistoryScreen extends ConsumerWidget {
                         );
                       },
                       error: (err, st) =>
-                          ErrorText(error: 'No transactions available'),
-                      loading: () => Loader(),
+                          const ErrorText(error: 'No transactions available'),
+                      loading: () => const Loader(),
                     ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );
