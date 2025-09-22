@@ -8,7 +8,6 @@ import 'package:medifirst/core/widgets/elements/card_53_image.dart';
 import 'package:medifirst/core/widgets/elements/section_container.dart';
 import 'package:medifirst/doctor_app/features/appointment_list/controller/appointment_list_controller.dart';
 import 'package:medifirst/models/appointment_info.dart';
-import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 class AppointmentRequestBar extends ConsumerStatefulWidget {
@@ -24,43 +23,8 @@ class AppointmentRequestBar extends ConsumerStatefulWidget {
 }
 
 class _AppointRequestBarState extends ConsumerState<AppointmentRequestBar> {
-  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-
-  Future<void> initializeNotifications() async {
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    const AndroidInitializationSettings androidInitializationSettings =
-        AndroidInitializationSettings("@mipmap/ic_launcher");
-    const DarwinInitializationSettings iOSInitializationSettings =
-        DarwinInitializationSettings();
-
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: androidInitializationSettings,
-      iOS: iOSInitializationSettings,
-    );
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: onDidReceiveNotification,
-      onDidReceiveBackgroundNotificationResponse: onDidReceiveNotification,
-    );
-
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestNotificationsPermission();
-    /**
-        await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestExactAlarmsPermission();
-     **/
-    tz.initializeTimeZones(); // Initialize timezone database
-  }
-
-  static Future<void> onDidReceiveNotification(
-      NotificationResponse notificationResponse) async {
-    print("Notification receive");
-  }
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   Future<void> scheduleNotification(
       int id, String title, String body, DateTime scheduledTime) async {
@@ -88,7 +52,6 @@ class _AppointRequestBarState extends ConsumerState<AppointmentRequestBar> {
   @override
   void initState() {
     super.initState();
-    initializeNotifications();
   }
 
   @override

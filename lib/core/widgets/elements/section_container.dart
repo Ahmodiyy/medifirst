@@ -5,7 +5,12 @@ class SectionContainer extends StatelessWidget {
   final double height;
   final Widget child;
   final Color? backgroundColor;
-  const SectionContainer({required this.height, required this.child, this.backgroundColor, super.key});
+
+  const SectionContainer(
+      {required this.height,
+      required this.child,
+      this.backgroundColor,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +22,7 @@ class SectionContainer extends StatelessWidget {
         color: backgroundColor ?? Palette.whiteColor,
         // borderRadius: BorderRadius.circular(10),
       ),
+      alignment: Alignment.center,
       child: child,
     );
   }
