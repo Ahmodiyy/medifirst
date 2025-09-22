@@ -48,20 +48,22 @@ class TransactionHistoryScreen extends ConsumerWidget {
                 children: [
                   DropdownButton<String>(
                     value: 'All Categories',
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.keyboard_arrow_down_rounded,
                       size: 24,
                       color: Palette.highlightTextGray,
                     ),
-                    style: Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
+                    style:
+                        Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
                       fontSize: 17,
                       color: Palette.hintTextGray,
                     ),
-                    underline: SizedBox(),
+                    underline: const SizedBox(),
                     onChanged: (String? newValue) {
                       // Handle dropdown value change
                     },
-                    items: <String>['All Categories', 'Debit', 'Credit']
+                    //, 'Debit', 'Credit'
+                    items: <String>['All Categories']
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -94,7 +96,7 @@ class TransactionHistoryScreen extends ConsumerWidget {
                 height: size.height * 641 / 852,
                 child: ref.watch(getTransactionsProvider(user!.uid)).when(
                       data: (transactions) {
-                        if(transactions.isNotEmpty){
+                        if (transactions.isNotEmpty) {
                           return ListView.builder(
                             itemCount: transactions.length,
                             itemBuilder: (context, index) {
@@ -111,12 +113,11 @@ class TransactionHistoryScreen extends ConsumerWidget {
                               );
                             },
                           );
-                        }else{
-                          return const ErrorText(error : 'No transaction');
+                        } else {
+                          return const ErrorText(error: 'No transaction');
                         }
                       },
-                      error: (err, st) =>
-                          ErrorText(error: err.toString()),
+                      error: (err, st) => ErrorText(error: err.toString()),
                       loading: () => const Loader(),
                     ),
               )

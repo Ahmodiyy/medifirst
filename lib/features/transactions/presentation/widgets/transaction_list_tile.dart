@@ -9,60 +9,86 @@ import 'package:medifirst/models/transaction_model.dart';
 
 class TransactionListTile extends StatelessWidget {
   final TransactionModel transaction;
+
   const TransactionListTile({super.key, required this.transaction});
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.sizeOf(context);
     return SectionContainer(
-      height: 70,
+      height: 100,
       child: Padding(
-        padding: EdgeInsets.all(size.width * 16 / 393),
+        padding: const EdgeInsets.all(20),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SvgPicture.asset(Data.transactionLogo[transaction.type]!, width: size.height * 32/852, height: 50,),
-            (size.height * 8/393).ph,
+            SvgPicture.asset(
+              Data.transactionLogo[transaction.type]!,
+              width: size.height * 32 / 852,
+              height: 50,
+            ),
+            (size.height * 8 / 393).ph,
             Column(
               children: [
                 Flexible(
-                  child: Text(Data.transactionType[transaction.type]!, style: Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
-                    fontSize: 14,
-                  ),),
-                ),
-                (size.height * 8/852).pv,
-                Flexible(
-                  child: RichText(text: TextSpan(
-                    text: DateFormat.MMMd().format(transaction.date.toDate()),
-                    style: Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
-                      color: Palette.highlightTextGray,
+                  child: Text(
+                    Data.transactionType[transaction.type]!,
+                    style:
+                        Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
+                      fontSize: 14,
                     ),
-                    children: [
-                      TextSpan(
-                        text: '. ${DateFormat.Hm().format(transaction.date.toDate())}',
-                        style: Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
+                  ),
+                ),
+                (size.height * 8 / 852).pv,
+                Flexible(
+                  child: RichText(
+                    text: TextSpan(
+                        text:
+                            DateFormat.MMMd().format(transaction.date.toDate()),
+                        style: Palette.lightModeAppTheme.textTheme.bodySmall
+                            ?.copyWith(
                           color: Palette.highlightTextGray,
                         ),
-                      )
-                    ]
-                  ),),
+                        children: [
+                          TextSpan(
+                            text:
+                                '. ${DateFormat.Hm().format(transaction.date.toDate())}',
+                            style: Palette.lightModeAppTheme.textTheme.bodySmall
+                                ?.copyWith(
+                              color: Palette.highlightTextGray,
+                            ),
+                          )
+                        ]),
+                  ),
                 ),
               ],
             ),
-             Flexible(child: Container()),
+            Flexible(child: Container()),
             Column(
               children: [
                 Flexible(
-                  child: Text((transaction.isDebit)? '-${Data.numberFormat.format(transaction.amount)}': '${Data.numberFormat.format(transaction.amount)}', style: Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
-                    fontSize: 14,
-                  ),),
+                  child: Text(
+                    (transaction.isDebit)
+                        ? '#${Data.numberFormat.format(transaction.amount)}'
+                        : '${Data.numberFormat.format(transaction.amount)}',
+                    style:
+                        Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
+                      fontSize: 14,
+                    ),
+                  ),
                 ),
-                (size.height * 8/393).ph,
+                (size.height * 8 / 393).ph,
                 Flexible(
-                  child: Text((transaction.isCompleted)? 'Successful': 'Failed', style: Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
-                    fontSize: 14,
-                    color: (transaction.isCompleted)? Palette.validationGreen : Palette.noRed,
-                  ),),
+                  child: Text(
+                    (transaction.isCompleted) ? 'Successful' : 'Failed',
+                    style:
+                        Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
+                      fontSize: 14,
+                      color: (transaction.isCompleted)
+                          ? Palette.validationGreen
+                          : Palette.noRed,
+                    ),
+                  ),
                 ),
               ],
             )

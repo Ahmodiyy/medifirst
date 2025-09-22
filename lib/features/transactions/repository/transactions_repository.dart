@@ -90,6 +90,7 @@ class TransactionsRepository {
       List<TransactionModel> appointments = [];
       final snapshots = _transactions
           .where('uid', isEqualTo: uid)
+          .where("type", isEqualTo: 2)
           .orderBy('date', descending: true)
           .snapshots();
 
