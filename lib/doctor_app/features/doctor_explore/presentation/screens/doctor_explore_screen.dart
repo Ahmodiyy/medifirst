@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:medifirst/core/theming/palette.dart';
@@ -16,11 +17,14 @@ import 'package:medifirst/doctor_app/features/doctor_calls/presentation/screens/
 import 'package:medifirst/doctor_app/features/doctor_explore/presentation/widgets/expandable_section_heading.dart';
 import 'package:medifirst/features/auth/controller/auth_controller.dart';
 import 'package:medifirst/features/explore/controller/explore_controller.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 import '../../../../../core/widgets/elements/card_53_image.dart';
 import '../../../../../core/widgets/elements/section_heading_text.dart';
+import '../../../../../main.dart';
 import '../widgets/doctor_explore_app_bar.dart';
 
 class DoctorExploreScreen extends ConsumerStatefulWidget {
@@ -44,10 +48,44 @@ class _DoctorExploreScreenState extends ConsumerState<DoctorExploreScreen> {
     );
   }
 
+  Future<void> initializeNotifications() async {
+    const AndroidInitializationSettings androidInitializationSettings =
+        AndroidInitializationSettings("@mipmap/ic_launcher");
+    const DarwinInitializationSettings iOSInitializationSettings =
+        DarwinInitializationSettings();
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: androidInitializationSettings,
+      iOS: iOSInitializationSettings,
+    );
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: onDidReceiveNotification,
+      onDidReceiveBackgroundNotificationResponse: onDidReceiveNotification,
+    );
+
+    final granted = await flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin>()
+            ?.requestNotificationsPermission() ??
+        false;
+    if (!granted) {
+      openAppSettings();
+    }
+    tz.initializeTimeZones(); // Initialize timezone database
+  }
+
+  static Future<void> onDidReceiveNotification(
+      NotificationResponse notificationResponse) async {
+    print("Notification receive");
+  }
+
   @override
   void initState() {
     super.initState();
     initZegoCall();
+    initializeNotifications();
   }
 
   @override
