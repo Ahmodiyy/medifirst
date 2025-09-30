@@ -1,3 +1,4 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -17,7 +18,6 @@ import 'package:medifirst/doctor_app/features/doctor_calls/presentation/screens/
 import 'package:medifirst/doctor_app/features/doctor_explore/presentation/widgets/expandable_section_heading.dart';
 import 'package:medifirst/features/auth/controller/auth_controller.dart';
 import 'package:medifirst/features/explore/controller/explore_controller.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
@@ -71,7 +71,7 @@ class _DoctorExploreScreenState extends ConsumerState<DoctorExploreScreen> {
             ?.requestNotificationsPermission() ??
         false;
     if (!granted) {
-      openAppSettings();
+      AppSettings.openAppSettings(type: AppSettingsType.notification);
     }
     tz.initializeTimeZones(); // Initialize timezone database
   }

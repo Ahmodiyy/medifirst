@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +17,6 @@ import 'package:medifirst/features/book_doctors/presentation/widgets/communicati
 import 'package:medifirst/features/book_doctors/presentation/widgets/set_time_section.dart';
 import 'package:medifirst/models/doctor_info.dart';
 import 'package:medifirst/models/user_info.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -72,7 +72,7 @@ class _BookDoctorPageState extends ConsumerState<BookDoctorPage> {
             ?.requestNotificationsPermission() ??
         false;
     if (!granted) {
-      openAppSettings();
+      AppSettings.openAppSettings(type: AppSettingsType.notification);
     }
     tz.initializeTimeZones(); // Initialize timezone database
   }
