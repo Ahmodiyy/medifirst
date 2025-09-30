@@ -121,10 +121,6 @@ class AppointmentShortInfoBar extends ConsumerWidget {
                               .read(loadingProvider.notifier)
                               .update((state) => true);
                           final book = ref.read(bookDoctorsControllerProvider);
-                          await book.removeFeeFromBalance(
-                            appointment.patientId,
-                            appointment.price,
-                          );
                           double amountAfterPercentage =
                               appointment.price * 0.8;
                           await book.removeFeeFromBalance(
