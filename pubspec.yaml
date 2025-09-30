@@ -4,7 +4,7 @@ description: A new Flutter project.
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+3
+version: 1.0.0+5
 
 environment:
   sdk: '>=3.0.2 <4.0.0'
@@ -57,6 +57,7 @@ dependencies:
   zego_uikit_signaling_plugin: ^2.8.7
   zego_uikit: ^2.27.0
   flutter_native_splash: ^2.4.1
+  app_settings: ^5.1.1
 #  flutter_windowmanager: ^0.2.0
 
 
