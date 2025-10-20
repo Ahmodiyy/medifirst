@@ -10,8 +10,8 @@ import 'package:medifirst/core/providers/firebase_providers.dart';
 import 'package:medifirst/core/utils/failure.dart';
 import 'package:medifirst/core/utils/type_defs.dart';
 import 'package:medifirst/models/user_info.dart';
-import 'package:uuid/uuid.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../models/transaction_model.dart';
 import '../../../models/wallet_info.dart';
@@ -96,7 +96,6 @@ class SettingsRepository {
     }
   }
 
-
   FutureVoid saveFirstPageWithPicture({
     required UserInfoModel user,
     String? image,
@@ -148,8 +147,6 @@ class SettingsRepository {
     }
   }
 
-
-
   FutureVoid saveSecondPage({
     required UserInfoModel user,
     required String uid,
@@ -176,8 +173,8 @@ class SettingsRepository {
       print('UID => $uid');
       print('USERUID => ${user.uid}');
       print('NEWUSERUID => ${newUser.uid}');
-       await _users.doc(user.uid).update({
-         'bloodGroup': bloodGroup,
+      await _users.doc(user.uid).update({
+        'bloodGroup': bloodGroup,
         'bloodPressure': bp,
         'weight': weight,
         'height': height,
@@ -277,6 +274,21 @@ class SettingsRepository {
       }
     } catch (e) {
       print('Error calling Cloud Function: $e');
+    }
+  }
+
+  Future<void> requestAccountDeletion(String email, String uid) async {
+    try {
+      await _firestore
+          .collection('accountDeletionRequests')
+          .doc(uid) // one doc per user
+          .set({
+        'uid': uid,
+        'email': email,
+        'requestedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      rethrow;
     }
   }
 }

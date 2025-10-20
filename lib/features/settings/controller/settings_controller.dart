@@ -1,11 +1,9 @@
 import 'dart:typed_data';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:medifirst/core/providers/firebase_providers.dart';
 
-import '../../../core/constants/constants.dart';
 import '../../../models/user_info.dart';
 import '../../../models/wallet_info.dart';
 import '../repository/settings_repository.dart';
@@ -40,24 +38,24 @@ class SettingsController {
     return _repo.getUserInfo(id);
   }
 
-  Stream<WalletInfo> getPatientWallet(String uid){
+  Stream<WalletInfo> getPatientWallet(String uid) {
     return _repo.getPatientWallet(uid);
   }
 
   Future<void> saveFirstPage({
     required UserInfoModel user,
     Uint8List? image,
-     String? imageFallback,
-     String? firstName,
-     String? surname,
-     String? age,
-     String? number,
-     String? address,
-     String? state,
-     String? lga,
-     String? occupation,
-     String? emergencyContact,
-     LatLng? latLng,
+    String? imageFallback,
+    String? firstName,
+    String? surname,
+    String? age,
+    String? number,
+    String? address,
+    String? state,
+    String? lga,
+    String? occupation,
+    String? emergencyContact,
+    LatLng? latLng,
   }) async {
     String? profilePic;
     if (image != null) {
@@ -70,7 +68,7 @@ class SettingsController {
       });
     }
     final result;
-    if(image != null){
+    if (image != null) {
       print('image is not null');
       result = await _repo.saveFirstPageWithPicture(
           user: user,
@@ -85,52 +83,51 @@ class SettingsController {
           occupation: occupation,
           emergencyContact: emergencyContact,
           latLng: latLng,
-          profilePicture: profilePic
-      );
-    }
-    else{
+          profilePicture: profilePic);
+    } else {
       print('image is null');
       result = await _repo.saveFirstPage(
-      user: user,
-      image: profilePic,
-      firstName: firstName,
-      surname: surname,
-      age: age,
-      number: number,
-      address: address,
-      state: state,
-      lga: lga,
-      occupation: occupation,
-      emergencyContact: emergencyContact,
-      latLng: latLng,
-    );}
+        user: user,
+        image: profilePic,
+        firstName: firstName,
+        surname: surname,
+        age: age,
+        number: number,
+        address: address,
+        state: state,
+        lga: lga,
+        occupation: occupation,
+        emergencyContact: emergencyContact,
+        latLng: latLng,
+      );
+    }
     result.fold((l) {
       throw l.error;
-    }, (r){
-    return null;
+    }, (r) {
+      return null;
     });
   }
 
   Future<void> saveSecondPage({
     required UserInfoModel user,
     required String uid,
-     String? bp,
-     String? weight,
-     String? height,
-     String? bmi,
-     String? surgicalHistory,
-     String? genotype,
-     String? bloodGroup,
-     String? geneticDisorder,
-     String? medicalDisorder,
+    String? bp,
+    String? weight,
+    String? height,
+    String? bmi,
+    String? surgicalHistory,
+    String? genotype,
+    String? bloodGroup,
+    String? geneticDisorder,
+    String? medicalDisorder,
   }) async {
     final res = await _repo.saveSecondPage(
       user: user,
       uid: uid,
       bp: bp,
-      weight: double.tryParse(weight??user.weight.toString()),
-      height: int.tryParse(height??user.height.toString()),
-      bmi: double.tryParse(bmi??user.bmi.toString()),
+      weight: double.tryParse(weight ?? user.weight.toString()),
+      height: int.tryParse(height ?? user.height.toString()),
+      bmi: double.tryParse(bmi ?? user.bmi.toString()),
       surgicalHistory: surgicalHistory,
       genotype: genotype,
       bloodGroup: bloodGroup,
@@ -142,13 +139,17 @@ class SettingsController {
     }, (r) => null);
   }
 
-  Future<void> depositFunds({required String uid, required double amount, required String accountNumber})async{
-    try{
-      final res = await _repo.depositFunds(uid: uid, amount: amount, accountNumber: accountNumber);
-      res.fold((l){
+  Future<void> depositFunds(
+      {required String uid,
+      required double amount,
+      required String accountNumber}) async {
+    try {
+      final res = await _repo.depositFunds(
+          uid: uid, amount: amount, accountNumber: accountNumber);
+      res.fold((l) {
         throw Exception(l.error);
       }, (r) => null);
-    }catch(e){
+    } catch (e) {
       rethrow;
     }
   }
@@ -159,5 +160,9 @@ class SettingsController {
 
   Future<void> initiatePayment(double amount, String email) async {
     _repo.initiatePayment(amount, email);
+  }
+
+  void requestAccountDeletion(String email, String uid) {
+    _repo.requestAccountDeletion(email, uid);
   }
 }
