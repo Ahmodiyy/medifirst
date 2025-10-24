@@ -211,6 +211,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     final Size size = MediaQuery.sizeOf(context);
     final isLoading = ref.watch(signUpLoadingProvider);
     return Scaffold(
+      backgroundColor: Palette.whiteColor,
       appBar: AppBar(
         backgroundColor: Palette.whiteColor,
         elevation: 0,
