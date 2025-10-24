@@ -30,6 +30,7 @@ class _SelectCategoryScreenState extends ConsumerState<SelectCategoryScreen> {
   Future<void> _showDisclaimerDialog(
       BuildContext context, WidgetRef ref) async {
     final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('disclaimerSeen') == true) return;
     if (!context.mounted) return;
     await showDialog<void>(
         context: context,
@@ -89,84 +90,67 @@ class _SelectCategoryScreenState extends ConsumerState<SelectCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final disclaimerAsync = ref.watch(disclaimerSeenProvider);
-
-    return disclaimerAsync.when(
-      loading: () => const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      ),
-      error: (_, __) => const Scaffold(
-        body: Center(child: Text('Error loading disclaimer')),
-      ),
-      data: (seen) {
-        if (!seen) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _showDisclaimerDialog(context, ref);
-          });
-        }
-        final Size size = MediaQuery.sizeOf(context);
-        return Scaffold(
-          backgroundColor: Palette.whiteColor,
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                children: [
-                  (size.height * 174 / 852).pv,
-                  Text(
-                    (widget.isNewUser) ? 'Registering As' : 'Select Category',
-                    style: Palette.lightModeAppTheme.textTheme.titleMedium
-                        ?.copyWith(
-                      fontSize: 36,
-                    ),
-                  ),
-                  (size.height * 40 / 852).pv,
-                  InkWell(
-                    onTap: () => selectCategory(Constants.patientCategory),
-                    child: OutlineCategoryButton(
-                      label: 'Patient',
-                      selected: (picked == Constants.patientCategory),
-                    ),
-                  ),
-                  (size.height * 32 / 852).pv,
-                  InkWell(
-                    onTap: () => selectCategory(Constants.doctorCategory),
-                    child: OutlineCategoryButton(
-                      label: 'Doctor',
-                      selected: (picked == Constants.doctorCategory),
-                    ),
-                  ),
-                  (size.height * 32 / 852).pv,
-                  // InkWell(
-                  //   onTap: () => selectCategory(Constants.pharmacyCategory),
-                  //   child: OutlineCategoryButton(label: 'Pharmacy', selected: (picked == Constants.pharmacyCategory),),
-                  // ),
-                  (size.height * 139 / 852).pv,
-                  InkWell(
-                    onTap: () {
-                      if (hasSelected) {
-                        navigateToSignUpPage(context, widget.isNewUser);
-                      }
-                    },
-                    child: const ActionButtonContainer(title: 'Continue'),
-                  ),
-                  (size.height * 25 / 852).pv,
-                  Text(
-                    'Once selected, this setting cannot be changed.',
-                    textAlign: TextAlign.center,
-                    style:
-                        Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
-                      height: 0.2,
-                      fontFamily: 'Roboto',
-                    ),
-                  ),
-                  (size.height * 62 / 852).pv,
-                ],
+    final Size size = MediaQuery.sizeOf(context);
+    return Scaffold(
+      backgroundColor: Palette.whiteColor,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            children: [
+              (size.height * 174 / 852).pv,
+              Text(
+                (widget.isNewUser) ? 'Registering As' : 'Select Category',
+                style:
+                    Palette.lightModeAppTheme.textTheme.titleMedium?.copyWith(
+                  fontSize: 36,
+                ),
               ),
-            ),
+              (size.height * 40 / 852).pv,
+              InkWell(
+                onTap: () => selectCategory(Constants.patientCategory),
+                child: OutlineCategoryButton(
+                  label: 'Patient',
+                  selected: (picked == Constants.patientCategory),
+                ),
+              ),
+              (size.height * 32 / 852).pv,
+              InkWell(
+                onTap: () => selectCategory(Constants.doctorCategory),
+                child: OutlineCategoryButton(
+                  label: 'Doctor',
+                  selected: (picked == Constants.doctorCategory),
+                ),
+              ),
+              (size.height * 32 / 852).pv,
+              // InkWell(
+              //   onTap: () => selectCategory(Constants.pharmacyCategory),
+              //   child: OutlineCategoryButton(label: 'Pharmacy', selected: (picked == Constants.pharmacyCategory),),
+              // ),
+              (size.height * 139 / 852).pv,
+              InkWell(
+                onTap: () {
+                  if (hasSelected) {
+                    if (widget.isNewUser) _showDisclaimerDialog(context, ref);
+                    navigateToSignUpPage(context, widget.isNewUser);
+                  }
+                },
+                child: const ActionButtonContainer(title: 'Continue'),
+              ),
+              (size.height * 25 / 852).pv,
+              Text(
+                'Once selected, this setting cannot be changed.',
+                textAlign: TextAlign.center,
+                style: Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
+                  height: 0.2,
+                  fontFamily: 'Roboto',
+                ),
+              ),
+              (size.height * 62 / 852).pv,
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
