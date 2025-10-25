@@ -45,7 +45,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           child: Column(
             children: [
               (size.height * 24 / 852).pv,
-              //TODO get wallet details
               const PatientWalletBalanceCard().sidePad(16),
               (size.height * 30 / 852).pv,
               const SectionHeadingText(heading: 'ACCOUNT SETTINGS')
