@@ -102,7 +102,6 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: size.height * 24 / 852),
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
