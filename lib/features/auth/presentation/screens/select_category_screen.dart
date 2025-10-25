@@ -9,11 +9,6 @@ import 'package:medifirst/features/auth/presentation/screens/sign_up_screen.dart
 import 'package:medifirst/features/auth/presentation/widgets/outline_category_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final disclaimerSeenProvider = FutureProvider<bool>((ref) async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('disclaimerSeen') ?? false;
-});
-
 class SelectCategoryScreen extends ConsumerStatefulWidget {
   final bool isNewUser;
 
@@ -26,47 +21,6 @@ class SelectCategoryScreen extends ConsumerStatefulWidget {
 class _SelectCategoryScreenState extends ConsumerState<SelectCategoryScreen> {
   bool hasSelected = false;
   String picked = '';
-
-  Future<void> _showDisclaimerDialog(
-      BuildContext context, WidgetRef ref) async {
-    final prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool('disclaimerSeen') == true) return;
-    if (!context.mounted) return;
-    await showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (_) => AlertDialog(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              title: const Text(
-                'Medical Disclaimer',
-                style:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-              ),
-              content: const Text(
-                'This app is not a substitute for professional medical advice, '
-                'diagnosis or treatment. Always consult a qualified health-care provider.',
-                style: TextStyle(color: Colors.black),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () async {
-                    await prefs.setBool('disclaimerSeen', true);
-                    if (context.mounted) Navigator.of(context).pop();
-                  },
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: const Color(0xFF2E7D32), // green 700
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text('I understand'),
-                ),
-              ],
-            ));
-  }
 
   void selectCategory(String category) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -131,7 +85,6 @@ class _SelectCategoryScreenState extends ConsumerState<SelectCategoryScreen> {
               InkWell(
                 onTap: () {
                   if (hasSelected) {
-                    if (widget.isNewUser) _showDisclaimerDialog(context, ref);
                     navigateToSignUpPage(context, widget.isNewUser);
                   }
                 },
