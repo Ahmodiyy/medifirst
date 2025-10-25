@@ -28,6 +28,12 @@ class _AppointRequestBarState extends ConsumerState<AppointmentRequestBar> {
 
   Future<void> scheduleNotification(
       int id, String title, String body, DateTime scheduledTime) async {
+    final granted = await flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin>()
+            ?.areNotificationsEnabled() ??
+        false;
+    if (!granted) return;
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
       title,

@@ -23,6 +23,7 @@ import 'package:timezone/timezone.dart' as tz;
 import '../../../../core/theming/palette.dart';
 import '../../../../core/widgets/elements/section_heading_text.dart';
 import '../../../../main.dart';
+import '../../../home/presentation/screens/home_screen.dart';
 
 class BookDoctorPage extends ConsumerStatefulWidget {
   final DoctorInfo doctorInfo;
@@ -84,6 +85,12 @@ class _BookDoctorPageState extends ConsumerState<BookDoctorPage> {
 
   Future<void> scheduleNotification(
       int id, String title, String body, DateTime scheduledTime) async {
+    final granted = await flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin>()
+            ?.areNotificationsEnabled() ??
+        false;
+    if (!granted) return;
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
       title,
@@ -166,9 +173,10 @@ class _BookDoctorPageState extends ConsumerState<BookDoctorPage> {
         setState(() {
           loading = false;
         });
-        // await controller.removeFeeFromBalance(user.uid, widget.doctorInfo.consultationFee);
-        showModalBottomSheet(
+        await showModalBottomSheet(
             context: context, builder: (context) => const ActionSuccessModal());
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()));
       } else {
         setState(() {
           loading = false;

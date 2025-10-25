@@ -16,13 +16,14 @@ class _ActionSuccessModalState extends State<ActionSuccessModal> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.sizeOf(context);
     return Container(
-      height: size.height * 355/852,
+      height: size.height * 355 / 852,
       width: double.infinity,
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       color: Palette.smallBodyGray,
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(size.width * 18/393),
+        padding: EdgeInsets.all(size.width * 18 / 393),
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(20), topLeft: Radius.circular(20)),
@@ -31,21 +32,30 @@ class _ActionSuccessModalState extends State<ActionSuccessModal> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            (size.height * 46/852).pv,
-            SvgPicture.asset('assets/icons/svgs/success.svg', height: 98, width: 98, fit: BoxFit.contain),
-            (size.height * 16/852).pv,
-            Text('Congratulations', style: Palette.lightModeAppTheme.textTheme.titleMedium?.copyWith(
-              fontSize: 20,
-            ),),
-            (size.height * 8/852).pv,
-            Text("You're all set!", style: Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
-              fontSize: 14,
-            ),),
+            (size.height * 46 / 852).pv,
+            SvgPicture.asset('assets/icons/svgs/success.svg',
+                height: 98, width: 98, fit: BoxFit.contain),
+            (size.height * 16 / 852).pv,
+            Text(
+              'Congratulations',
+              style: Palette.lightModeAppTheme.textTheme.titleMedium?.copyWith(
+                fontSize: 20,
+              ),
+            ),
+            (size.height * 8 / 852).pv,
+            Text(
+              "You're all set!",
+              style: Palette.lightModeAppTheme.textTheme.bodySmall?.copyWith(
+                fontSize: 14,
+              ),
+            ),
             Flexible(child: Container()),
-            InkWell(onTap: (){
-              Navigator.pop(context);
-            }, child: const ActionButtonContainer(title: 'Continue')),
-            (size.height * 8/852).pv,
+            InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: const ActionButtonContainer(title: 'Continue')),
+            (size.height * 8 / 852).pv,
           ],
         ),
       ),
