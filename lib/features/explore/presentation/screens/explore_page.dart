@@ -120,13 +120,6 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
                     child: _buildMedicationBar(ref, user?.uid ?? ''),
                   ),
                   SizedBox(height: size.height * 24 / 852),
-                  Image.asset(
-                    'assets/images/banner.png',
-                    width: double.infinity,
-                    height: size.height * 109 / 852,
-                    fit: BoxFit.fitWidth,
-                  ),
-                  SizedBox(height: size.height * 24 / 852),
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: size.width * 16 / 393),
