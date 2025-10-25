@@ -23,31 +23,40 @@ class _ExploreCategoryRowState extends State<ExploreCategoryRow> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        InkWell(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => DoctorListScreen()));
-            },
-            child: const ExploreCategoryItem(
-              svg: 'assets/icons/explore/consultant.png',
-              title: 'Consultation',
-              topColor: Palette.consultationGreen,
-              bottomColor: Palette.consultationDarkGreen,
-            )),
+        Expanded(
+          child: InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => DoctorListScreen()));
+              },
+              child: const ExploreCategoryItem(
+                svg: 'assets/icons/explore/consultant.png',
+                title: 'Consultation',
+                topColor: Palette.consultationGreen,
+                bottomColor: Palette.consultationDarkGreen,
+              )),
+        ),
+        const SizedBox(
+          width: 10,
+        ),
         //InkWell(onTap: ()=>showOopsDialog(context), child: const ExploreCategoryItem(svg: 'assets/icons/explore/drugs.png', title: 'Medicine', topColor: Palette.medicineBlue, bottomColor: Palette.medicineDarkBlue,)),
-        InkWell(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const EmergencyPage()));
-            },
-            child: const ExploreCategoryItem(
-              svg: 'assets/icons/explore/emergency.png',
-              title: 'Emergency',
-              topColor: Palette.emergencyRed,
-              bottomColor: Palette.emergencyDarkRed,
-            )),
+        Expanded(
+          child: InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const EmergencyPage()));
+              },
+              child: const ExploreCategoryItem(
+                svg: 'assets/icons/explore/emergency.png',
+                title: 'Emergency',
+                topColor: Palette.emergencyRed,
+                bottomColor: Palette.emergencyDarkRed,
+              )),
+        ),
         //InkWell(onTap: ()=>showOopsDialog(context), child: const ExploreCategoryItem(svg: 'assets/icons/explore/healthcare.png', title: 'Healthcare', topColor: Palette.healthcarePurple, bottomColor: Palette.healthcareDarkPurple,)),
       ],
     );
