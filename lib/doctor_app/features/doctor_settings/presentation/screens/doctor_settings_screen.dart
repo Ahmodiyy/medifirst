@@ -13,6 +13,7 @@ import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
 import '../../../../../core/theming/palette.dart';
 import '../../../wallet/presentation/screens/doctor_wallet_screen.dart';
+import '../../controller/doctor_settings_controller.dart';
 
 class DoctorSettingsScreen extends ConsumerStatefulWidget {
   const DoctorSettingsScreen({super.key});
@@ -26,12 +27,6 @@ class _SettingsScreenState extends ConsumerState<DoctorSettingsScreen> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.sizeOf(context);
     final doctor = ref.watch(doctorProvider);
-    // final user = UserInfoModel(
-    //     name: 'Mayo',
-    //     surname: 'Odukoya',
-    //     uid: '68f56',
-    //     profilePicture:
-    //         'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg');
     return Scaffold(
       backgroundColor: Palette.backGroundColor,
       appBar: AppBar(
@@ -124,6 +119,68 @@ class _SettingsScreenState extends ConsumerState<DoctorSettingsScreen> {
                 child: const SettingButtonTile(
                   label: 'Sign Out',
                   svg: 'assets/icons/svgs/logout.svg',
+                  color: Palette.logoutRed,
+                ),
+              ),
+              (size.height * 24 / 852).pv,
+              InkWell(
+                onTap: () async {
+                  await showDialog<void>(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (_) => AlertDialog(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      title: const Text(
+                        'Delete account',
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                      ),
+                      content: const Text(
+                        'Are you sure? This will permanently remove your account and data.',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            ref
+                                .read(doctorSettingsControllerProvider)
+                                .requestAccountDeletion(
+                                    doctor!.email, doctor.doctorId);
+                            Navigator.of(context).pop();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Deletion request submitted. Your data will be permanently removed within 10 days.',
+                                ),
+                                duration: Duration(seconds: 4),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Palette.logoutRed,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text('Yes, delete'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                child: const SettingButtonTile(
+                  label: 'Delete account',
+                  svg: 'assets/icons/svgs/trash.svg',
                   color: Palette.logoutRed,
                 ),
               ),

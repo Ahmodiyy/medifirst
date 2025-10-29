@@ -139,4 +139,19 @@ class DoctorSettingsRepository {
       return left(Failure(e.toString()));
     }
   }
+
+  Future<void> requestAccountDeletion(String email, String uid) async {
+    try {
+      await _firestore
+          .collection('doctorAccountDeletionRequests')
+          .doc(uid) // one doc per user
+          .set({
+        'uid': uid,
+        'email': email,
+        'requestedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

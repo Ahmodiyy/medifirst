@@ -40,7 +40,7 @@ class DoctorSettingsController {
     return _repo.getDoctorInfo(id);
   }
 
-  Stream<WalletInfo> getDoctorWallet(String doctorId){
+  Stream<WalletInfo> getDoctorWallet(String doctorId) {
     return _repo.getDoctorWallet(doctorId);
   }
 
@@ -48,16 +48,16 @@ class DoctorSettingsController {
     required DoctorInfo doc,
     Uint8List? image,
     required String imageFallback,
-     String? firstName,
-     String? surname,
-     String? age,
-     String? number,
-     String? address,
-     String? state,
-     String? lga,
-     String? profession,
-     String? bio,
-     LatLng? latLng,
+    String? firstName,
+    String? surname,
+    String? age,
+    String? number,
+    String? address,
+    String? state,
+    String? lga,
+    String? profession,
+    String? bio,
+    LatLng? latLng,
   }) async {
     debugPrint('------doctor saving continue');
     String? profilePic;
@@ -93,56 +93,67 @@ class DoctorSettingsController {
 
   Future<void> saveSecondPage({
     required DoctorInfo doc,
-     String? yearsOfExp,
-     String? licenseNo,
-     String? qualifications,
-     String? consultationFee,
-     TimeOfDay? openTime,
-     TimeOfDay? closeTime,
-     List<Uint8List>? certificateImage,
+    String? yearsOfExp,
+    String? licenseNo,
+    String? qualifications,
+    String? consultationFee,
+    TimeOfDay? openTime,
+    TimeOfDay? closeTime,
+    List<Uint8List>? certificateImage,
   }) async {
     List<String> urls = [];
-    if(certificateImage!.length > 0 ) {
+    if (certificateImage!.length > 0) {
       print("--------------certificate is  not null----------");
       //if (certificateImage.isNotEmpty) {
-        for (Uint8List image in certificateImage!) {
-          print("--------------uploading doctor certificate----------");
-          final res = await _storageRepo.storeImage(
-              path: 'doctors-certificates', id: '${doc.doctorId}${image.toString()}', file: image);
-          print('----------uploaded certificate url  ${res.toString()}');
-          res.fold((l) {
-            throw l.error;
-          }, (r) {
-            urls.add(r);
-          });
-        }
-     // }
-    }
-    else{
+      for (Uint8List image in certificateImage!) {
+        print("--------------uploading doctor certificate----------");
+        final res = await _storageRepo.storeImage(
+            path: 'doctors-certificates',
+            id: '${doc.doctorId}${image.toString()}',
+            file: image);
+        print('----------uploaded certificate url  ${res.toString()}');
+        res.fold((l) {
+          throw l.error;
+        }, (r) {
+          urls.add(r);
+        });
+      }
+      // }
+    } else {
       print("--------------certificate null-------------");
     }
     final res = await _repo.saveSecondPage(
         doc: doc,
-        yearsOfExp: int.tryParse(yearsOfExp ?? doc.yearsOfExperience.toString()),
+        yearsOfExp:
+            int.tryParse(yearsOfExp ?? doc.yearsOfExperience.toString()),
         licenseNo: licenseNo,
         qualifications: qualifications,
         openingHours: openTime,
         closingHours: closeTime,
-        consultationFee: int.tryParse(consultationFee??doc.consultationFee.toString()),
+        consultationFee:
+            int.tryParse(consultationFee ?? doc.consultationFee.toString()),
         certificateImage: urls);
     res.fold((l) {
       throw l.error;
     }, (r) => null);
   }
 
-  Future<void> withdrawFunds({required String doctorId, required double amount, required String accountNumber})async{
-    try{
-      final res = await _repo.withdrawFunds(doctorId: doctorId, amount: amount, accountNumber: accountNumber);
-      res.fold((l){
+  Future<void> withdrawFunds(
+      {required String doctorId,
+      required double amount,
+      required String accountNumber}) async {
+    try {
+      final res = await _repo.withdrawFunds(
+          doctorId: doctorId, amount: amount, accountNumber: accountNumber);
+      res.fold((l) {
         throw Exception(l.error);
       }, (r) => null);
-    }catch(e){
+    } catch (e) {
       rethrow;
     }
+  }
+
+  void requestAccountDeletion(String email, String uid) {
+    _repo.requestAccountDeletion(email, uid);
   }
 }
