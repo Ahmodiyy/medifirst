@@ -67,6 +67,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> login(
       {required WidgetRef ref, required BuildContext context}) async {
+    if (_emailController.text.isEmpty && _pwController.text.isEmpty) {
+      return;
+    }
     setState(() {
       isLoading = true;
     });
